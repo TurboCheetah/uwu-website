@@ -14,9 +14,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "sass": "1.56.0",
+    "sass": "1.56.1",
     "typescript": "4.8.4",
-    "vite": "3.2.2",
+    "vite": "3.2.3",
     "xo": "0.52.4"
   },
   "xo": {
