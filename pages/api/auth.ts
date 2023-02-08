@@ -4,10 +4,10 @@ type AuthResponse = {
   authorized: boolean;
 };
 
-export default function handler(
+export default const handler = (
   req: NextApiRequest,
   res: NextApiResponse<AuthResponse>
-) {
+) => {
   if (req.body.inviteCode !== process.env.INVITE_CODE) {
     return res.status(401).json({ authorized: false });
   }
