@@ -1,25 +1,29 @@
 {
-  "name": "uwu-website",
-  "version": "1.1.0",
-  "main": "index.js",
-  "repository": "git@github.com:TurboCheetah/uwu-website.git",
-  "author": "Turbo <dev@turbo.ooo>",
-  "license": "MIT",
-  "type": "module",
+  "name": "uwu.ee",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "lint": "xo",
-    "lint:fix": "xo --fix",
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@next/font": "13.1.6",
+    "@types/node": "18.13.0",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "daisyui": "^2.50.0",
+    "eslint": "8.33.0",
+    "eslint-config-next": "13.1.6",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "4.9.5"
   },
   "devDependencies": {
-    "sass": "1.55.0",
-    "typescript": "4.8.4",
-    "vite": "3.1.7",
-    "xo": "0.52.4"
-  },
-  "xo": {
-    "semicolon": false
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4"
   }
 }
