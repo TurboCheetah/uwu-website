@@ -8,7 +8,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<AuthResponse>
 ) {
-  if (req.body.inviteCode !== "iUmdLHTDfugFbfpTl8TjEOjnAu14XfC0") {
+  if (req.body.inviteCode !== process.env.INVITE_CODE) {
     return res.status(401).json({ authorized: false });
   }
 
