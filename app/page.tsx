@@ -96,7 +96,7 @@ export default function Home() {
         </div>
       )}
       <video
-        className="absolute top-56 md:top-64 lg:top-60 w-full h-auto min-h-screen object-cover opacity-25 z-0"
+        className="absolute top-56 md:top-64 lg:top-60 w-full h-auto min-h-screen object-cover opacity-60 z-0"
         autoPlay
         muted
         loop
