@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@next/font": "13.5.6",
-    "@types/node": "18.19.21",
-    "@types/react": "18.2.61",
-    "@types/react-dom": "18.2.19",
+    "@types/node": "18.19.22",
+    "@types/react": "18.2.64",
+    "@types/react-dom": "18.2.21",
     "daisyui": "^2.50.0",
     "eslint": "8.57.0",
     "eslint-config-next": "13.5.6",
