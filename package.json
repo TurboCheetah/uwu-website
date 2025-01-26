@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@next/font": "13.5.8",
-    "@types/node": "18.19.71",
+    "@types/node": "18.19.74",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "daisyui": "^2.50.0",
