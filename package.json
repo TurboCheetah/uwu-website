@@ -14,7 +14,7 @@
     "@types/react": "18.3.19",
     "@types/react-dom": "18.3.5",
     "daisyui": "^2.50.0",
-    "eslint": "8.57.1",
+    "eslint": "9.23.0",
     "eslint-config-next": "13.5.9",
     "next": "13.5.9",
     "react": "18.3.1",
