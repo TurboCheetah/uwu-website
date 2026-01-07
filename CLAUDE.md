@@ -299,11 +299,14 @@ Uses Next.js core-web-vitals ESLint config for best practices.
 6. **Browser compatibility**: Consider video format support, CSS features
 
 ### Deployment Considerations
-- Build command: `bun run build`
-- Start command: `bun start`
-- Requires Bun runtime environment
-- Environment variables must be set in deployment platform
-- Static assets in `public/` directory served at root
+- **Platform**: Automatically deployed to Vercel
+- **Build command**: `bun run build`
+- **Start command**: `bun start`
+- **Runtime**: Requires Bun runtime environment
+- **Environment Variables**: Set in Vercel dashboard for production
+  - `INVITE_CODE`: Required for authentication
+- **Static Assets**: Files in `public/` directory served at root
+- **Automatic Deployments**: Pushes to configured branches trigger automatic deployments
 
 ---
 
