@@ -11,7 +11,7 @@ This document provides comprehensive guidance for AI assistants working with the
 - **Language**: TypeScript 4.9.5 (strict mode enabled)
 - **Styling**: Tailwind CSS 3.x + DaisyUI 2.50.0
 - **Runtime**: Node.js with React 18.3.1
-- **Package Manager**: npm
+- **Package Manager**: bun
 
 ### Key Characteristics
 - Single-page application with invite code authentication
@@ -93,19 +93,19 @@ uwu-website/
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Start development server (http://localhost:3000)
-npm run dev
+bun run dev
 
 # Build for production
-npm run build
+bun run build
 
 # Start production server
-npm start
+bun start
 
 # Run linter
-npm run lint
+bun run lint
 ```
 
 ### Environment Variables
@@ -260,7 +260,7 @@ Update `app/head.tsx`:
 
 ### Linting
 ```bash
-npm run lint
+bun run lint
 ```
 Uses Next.js core-web-vitals ESLint config for best practices.
 
@@ -299,9 +299,9 @@ Uses Next.js core-web-vitals ESLint config for best practices.
 6. **Browser compatibility**: Consider video format support, CSS features
 
 ### Deployment Considerations
-- Build command: `npm run build`
-- Start command: `npm start`
-- Requires Node.js environment
+- Build command: `bun run build`
+- Start command: `bun start`
+- Requires Bun runtime environment
 - Environment variables must be set in deployment platform
 - Static assets in `public/` directory served at root
 
@@ -326,10 +326,10 @@ Full documentation: https://daisyui.com/components/
 
 ```bash
 # Development
-npm run dev          # Start dev server on port 3000
-npm run build        # Create production build
-npm run start        # Start production server
-npm run lint         # Run ESLint
+bun run dev          # Start dev server on port 3000
+bun run build        # Create production build
+bun start            # Start production server
+bun run lint         # Run ESLint
 
 # Git workflow (for AI assistants)
 git checkout -b claude/feature-name-{sessionId}
@@ -338,9 +338,9 @@ git commit -m "feat: descriptive message"
 git push -u origin claude/feature-name-{sessionId}
 
 # Dependency management
-npm install          # Install dependencies
-npm update           # Update dependencies (check Renovate first)
-npm outdated         # Check for outdated packages
+bun install          # Install dependencies
+bun update           # Update dependencies (check Renovate first)
+bun outdated         # Check for outdated packages
 ```
 
 ---
