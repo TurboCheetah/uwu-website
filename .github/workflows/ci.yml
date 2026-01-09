@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - uses: oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979 # v2
         with:
           bun-version: latest
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - uses: oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979 # v2
         with:
           bun-version: latest
