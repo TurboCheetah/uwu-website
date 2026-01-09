@@ -114,19 +114,19 @@ uwu.ee/
 
 ### When Adding New Components
 
-```typescript
+```tsx
 // Client component (with hooks or interactivity)
-"use client";
-import { useState } from "react";
+'use client'
+import { useState } from 'react'
 
 export default function MyComponent() {
-  const [state, setState] = useState(null);
+  const [state, setState] = useState(null)
 
   return (
     <div className="card bg-base-100 shadow-xl">
       {/* Component content */}
     </div>
-  );
+  )
 }
 
 // Server component (default, no directive)
@@ -135,7 +135,7 @@ export default function MyServerComponent() {
     <div className="alert alert-info">
       {/* Server-rendered content */}
     </div>
-  );
+  )
 }
 ```
 
@@ -143,24 +143,24 @@ export default function MyServerComponent() {
 
 ```typescript
 // pages/api/example.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-type ResponseData = {
-  message: string;
-  authorized?: boolean;
-};
+interface ResponseData {
+  message: string
+  authorized?: boolean
+}
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   // Validate request method
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' })
   }
 
   // Handle request
-  res.status(200).json({ message: "Success" });
+  res.status(200).json({ message: 'Success' })
 }
 ```
 
@@ -176,7 +176,9 @@ export default function handler(
 <button className="btn btn-primary btn-square text-white">
   Submit
 </button>
+```
 
+```tsx
 // Example: Input with styling
 <input
   type="text"
@@ -320,64 +322,66 @@ gh pr create --title "Add user authentication" --body "..."
 
 ### Form Handling
 
-```typescript
-"use client";
-import { useState, FormEvent, ChangeEvent } from "react";
+```tsx
+'use client'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
 export default function MyForm() {
-  const [formData, setFormData] = useState({ field: "" });
-  const [error, setError] = useState<null | string>(null);
-  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState({ field: '' })
+  const [error, setError] = useState<null | string>(null)
+  const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
+    e.preventDefault()
+    setError(null)
+    setSuccess(false)
 
     try {
-      const res = await fetch("/api/endpoint", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/endpoint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (res.status === 200) {
-        setSuccess(true);
-      } else {
-        setError("Operation failed");
+        setSuccess(true)
       }
-    } catch (err: any) {
-      setError(`Something went wrong: ${err.message}`);
+      else {
+        setError('Operation failed')
+      }
     }
-  };
+    catch (err: any) {
+      setError(`Something went wrong: ${err.message}`)
+    }
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   return (
     <form onSubmit={handleSubmit}>
       {/* Form fields */}
     </form>
-  );
+  )
 }
 ```
 
 ### Toast Notifications
 
-```typescript
+```tsx
 // State
-const [showAlert, setShowAlert] = useState(true);
+const [showAlert, setShowAlert] = useState(true)
 
 useEffect(() => {
   if (showAlert) {
-    const timeout = setTimeout(() => setShowAlert(false), 5000);
-    return () => clearTimeout(timeout);
+    const timeout = setTimeout(() => setShowAlert(false), 5000)
+    return () => clearTimeout(timeout)
   }
-}, [showAlert]);
+}, [showAlert])
 
 // JSX
-{showAlert && success && (
+{ showAlert && success && (
   <div className="toast toast-top toast-end">
     <div className="alert alert-success">
       <div>
@@ -388,7 +392,7 @@ useEffect(() => {
       </div>
     </div>
   </div>
-)}
+) }
 ```
 
 ## Troubleshooting
