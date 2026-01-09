@@ -192,52 +192,54 @@ INVITE_CODE=your_invite_code_here
 ## Common Tasks for AI Assistants
 
 ### 1. Adding New Components
-```typescript
+```tsx
 // app/components/Example.tsx
 export default function Example() {
   return (
     <div className="card bg-base-100 shadow-xl">
       {/* Component content */}
     </div>
-  );
+  )
 }
 ```
 
 ### 2. Creating API Endpoints
 ```typescript
 // pages/api/example.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-type ResponseData = {
-  message: string;
-};
+interface ResponseData {
+  message: string
+}
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  res.status(200).json({ message: "Success" });
+  res.status(200).json({ message: 'Success' })
 }
 ```
 
 ### 3. Modifying Theme Colors
 Edit `tailwind.config.js`:
 ```javascript
-daisyui: {
-  themes: [
-    {
-      main: {
-        primary: "#NEW_COLOR",
-        // ... other colors
+module.exports = {
+  daisyui: {
+    themes: [
+      {
+        main: {
+          primary: '#NEW_COLOR',
+          // ... other colors
+        },
       },
-    },
-  ],
-},
+    ],
+  },
+}
 ```
 
 ### 4. Adding Meta Tags
 Update `app/head.tsx`:
-```typescript
+```tsx
 <meta property="og:image" content="https://example.com/image.png" />
 ```
 
