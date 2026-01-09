@@ -1,12 +1,15 @@
 {
   "name": "uwu.ee",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck:ci": "tsc --noEmit"
   },
   "dependencies": {
     "@next/font": "13.5.11",
@@ -14,15 +17,15 @@
     "@types/react": "18.3.27",
     "@types/react-dom": "18.3.7",
     "daisyui": "^2.50.0",
-    "eslint": "8.57.1",
-    "eslint-config-next": "13.5.11",
     "next": "13.5.11",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "5.9.3"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^4.2.1",
     "autoprefixer": "^10.4.13",
+    "eslint": "^9.17.0",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.4"
   }

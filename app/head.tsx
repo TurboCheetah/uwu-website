@@ -9,5 +9,5 @@ export default function Head() {
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://uwu.ee/" />
     </>
-  );
+  )
 }
