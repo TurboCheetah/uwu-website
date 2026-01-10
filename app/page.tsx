@@ -1,52 +1,55 @@
-"use client";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+'use client'
+import type { ChangeEvent, FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
-  const [formData, setFormData] = useState({ inviteCode: "" });
-  const [error, setError] = useState<null | string>(null);
-  const [success, setSuccess] = useState(false);
-  const [showAlert, setShowAlert] = useState(true);
+  const [formData, setFormData] = useState({ inviteCode: '' })
+  const [error, setError] = useState<null | string>(null)
+  const [success, setSuccess] = useState(false)
+  const [showAlert, setShowAlert] = useState(true)
 
   useEffect(() => {
     if (showAlert) {
       const timeout = setTimeout(() => {
-        setShowAlert(false);
-      }, 5000);
+        setShowAlert(false)
+      }, 5000)
 
-      return () => clearTimeout(timeout);
+      return () => clearTimeout(timeout)
     }
-  }, [showAlert]);
+  }, [showAlert])
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setShowAlert(false);
-    setError(null);
-    setSuccess(false);
+    e.preventDefault()
+    setShowAlert(false)
+    setError(null)
+    setSuccess(false)
 
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
+      const res = await fetch('/api/auth', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      setShowAlert(true);
+      setShowAlert(true)
 
       if (res.status === 401) {
-        setError("Invite code is invalid");
-      } else if (res.status === 200) {
-        setSuccess(true);
+        setError('Invite code is invalid')
       }
-    } catch (err: any) {
-      setError(`Something went wrong: ${err.message}`);
+      else if (res.status === 200) {
+        setSuccess(true)
+      }
     }
-  };
+    catch (err) {
+      setError(`Something went wrong: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    }
+  }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   return (
     <main>
@@ -73,7 +76,7 @@ export default function Home() {
         </div>
       )}
 
-      {showAlert && error && (
+      {showAlert && error != null && (
         <div className="toast toast-top toast-end">
           <div className="alert alert-error">
             <div>
@@ -111,12 +114,13 @@ export default function Home() {
             <span className="underline underline-offset-3 decoration-8 decoration-primary">
               Anonymous
               <br />
-            </span>{" "}
+            </span>
+            {' '}
             email forwarding
             <br />
             service
           </h1>
-          <form onSubmit={handleSubmit} className="form-control">
+          <form onSubmit={(e) => { void handleSubmit(e) }} className="form-control">
             <div className="input-group flex justify-center">
               <input
                 type="text"
@@ -139,7 +143,8 @@ export default function Home() {
                     d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                  ></path>
+                  >
+                  </path>
                 </svg>
               </button>
             </div>
@@ -147,5 +152,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  );
+  )
 }
