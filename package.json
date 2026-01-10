@@ -12,12 +12,12 @@
     "typecheck:ci": "tsc --noEmit"
   },
   "dependencies": {
-    "@next/font": "13.5.11",
+    "@next/font": "14.2.15",
     "@types/node": "25.0.3",
     "@types/react": "18.3.27",
     "@types/react-dom": "18.3.7",
     "daisyui": "^2.50.0",
-    "next": "13.5.11",
+    "next": "16.1.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "5.9.3"
