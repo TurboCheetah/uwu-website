@@ -4,7 +4,7 @@ AI coding agent guide for uwu.ee - an anonymous email forwarding service landing
 
 ## Project Overview
 
-**uwu.ee** is a single-page Next.js 13.5.11 application with invite code authentication, built with TypeScript (strict mode), Tailwind CSS, and DaisyUI.
+**uwu.ee** is a single-page Next.js 16.1.1 application with invite code authentication, built with TypeScript (strict mode), Tailwind CSS, and ShadCN UI.
 
 ---
 
@@ -72,8 +72,9 @@ bun run lint:fix     # Auto-fix ESLint issues
 
 ### Styling
 - **Tailwind**: Use utility classes for layout, spacing, responsive breakpoints
-- **DaisyUI**: Use component classes (btn, input, alert, toast)
-- **Theme**: Primary `#818CF8`, Secondary `#38BDF8`, Base-100 `#000000`
+- **ShadCN UI**: Use component imports from `#/components/ui/`
+- **Theme**: Lyra style (stone base, indigo primary, no border radius)
+- **Toast**: Use Sonner with `toast.success()` / `toast.error()` programmatic API
 - **Responsive**: Mobile-first with `md:` and `lg:` breakpoints
 
 ---
