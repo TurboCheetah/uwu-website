@@ -18,7 +18,7 @@ export default function Home() {
     }
   }, [showAlert])
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault()
     setShowAlert(false)
     setError(null)
@@ -59,7 +59,7 @@ export default function Home() {
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="stroke-current flex-shrink-0 h-6 w-6"
+                className="stroke-current shrink-0 h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -82,7 +82,7 @@ export default function Home() {
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="stroke-current flex-shrink-0 h-6 w-6"
+                className="stroke-current shrink-0 h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -108,7 +108,7 @@ export default function Home() {
         <source src="assets/bg.webm" type="video/webm" />
         <source src="assets/bg.mp4" type="video/mp4" />
       </video>
-      <div className="flex items-center justify-center h-screen bg-base-300 bg-gradient-to-bg-primary from-bottom-75 z-10 relative bg-opacity-0">
+      <div className="flex items-center justify-center h-screen bg-base-300 bg-linear-to-b from-primary to-transparent z-10 relative bg-opacity-0">
         <div className="text-center">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl">
             <span className="underline underline-offset-3 decoration-8 decoration-primary">
@@ -120,34 +120,37 @@ export default function Home() {
             <br />
             service
           </h1>
-          <form onSubmit={(e) => { void handleSubmit(e) }} className="form-control">
-            <div className="input-group flex justify-center">
-              <input
-                type="text"
-                placeholder="Invite Code"
-                className="input input-bordered w-36"
-                name="inviteCode"
-                onChange={handleInputChange}
-              />
-              <button className="btn btn-primary btn-square text-white">
-                <svg
-                  aria-hidden="true"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  className="w-6 h-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+          <form onSubmit={(e) => { void handleSubmit(e) }}>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Invite Code</legend>
+              <div className="join flex justify-center">
+                <input
+                  type="text"
+                  placeholder="Invite Code"
+                  className="input w-36"
+                  name="inviteCode"
+                  onChange={handleInputChange}
+                />
+                <button className="btn btn-primary btn-square join-item text-white">
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    className="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                  </path>
-                </svg>
-              </button>
-            </div>
+                    <path
+                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                    </path>
+                  </svg>
+                </button>
+              </div>
+            </fieldset>
           </form>
         </div>
       </div>
