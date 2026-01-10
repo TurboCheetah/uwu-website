@@ -8,10 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-<<<<<<< HEAD
     "lint:fix": "eslint . --fix",
-=======
->>>>>>> 94ae317 (fix: update lint script to use ESLint CLI for ESLint 9 compatibility)
     "typecheck:ci": "tsc --noEmit"
   },
   "dependencies": {
