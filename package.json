@@ -7,13 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "next lint",
     "typecheck:ci": "tsc --noEmit"
   },
   "dependencies": {
     "@next/font": "13.5.11",
-    "@types/node": "24.10.4",
+    "@types/node": "25.0.3",
     "@types/react": "18.3.27",
     "@types/react-dom": "18.3.7",
     "daisyui": "^2.50.0",
