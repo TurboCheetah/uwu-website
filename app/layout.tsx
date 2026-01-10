@@ -1,3 +1,5 @@
+import { Toaster } from '#/components/ui/sonner'
+
 import './globals.css'
 
 export default function RootLayout({
@@ -8,7 +10,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster position="top-right" />
+      </body>
     </html>
   )
 }

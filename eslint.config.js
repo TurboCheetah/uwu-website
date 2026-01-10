@@ -9,5 +9,6 @@ export default antfu({
   },
   ignores: [
     '.github/workflows/*.yml',
+    '.sisyphus/**',
   ],
 })
