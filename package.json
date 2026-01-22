@@ -23,7 +23,7 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.0.0",
+    "@antfu/eslint-config": "^7.0.0",
     "autoprefixer": "^10.4.13",
     "eslint": "^9.17.0",
     "postcss": "^8.4.21",
