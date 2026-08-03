@@ -147,6 +147,9 @@ const tsconfig = JSON.parse(
 const buttonSource = readFileSync(new URL("../components/ui/button.tsx", import.meta.url), "utf8");
 const inputSource = readFileSync(new URL("../components/ui/input.tsx", import.meta.url), "utf8");
 const pageSource = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
+const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
+const legacyHeadUrl = new URL("../app/head.tsx", import.meta.url);
+const layoutSource = readFileSync(layoutUrl, "utf8");
 const eslintConfigUrl = new URL("../eslint.config.js", import.meta.url);
 const nextConfigUrls = [
   new URL("../next.config.js", import.meta.url),
@@ -170,6 +173,42 @@ function collectSourceFiles(directory: string): string[] {
     return /\.[cm]?[jt]sx?$/.test(entry.name) ? [path] : [];
   });
 }
+
+describe("Next App Router metadata artifacts", () => {
+  test("uses typed Metadata and Viewport exports in the root layout", () => {
+    expect(layoutSource).toMatch(
+      /import\s+type\s*\{[^}]*\bMetadata\b[^}]*\bViewport\b[^}]*\}\s+from\s+["']next["']/,
+    );
+    expect(layoutSource).toMatch(/export\s+const\s+metadata\s*:\s*Metadata\s*=\s*\{/);
+    expect(layoutSource).toMatch(/\btitle\s*:\s*["']uwu["']/);
+    expect(layoutSource).toMatch(/\bdescription\s*:\s*["']OwO What’s This["']/);
+    expect(layoutSource).toMatch(/\bother\s*:\s*\{\s*title\s*:\s*["']uwu["']\s*,?\s*\}/);
+    expect(layoutSource).toMatch(/\bopenGraph\s*:\s*\{[^}]*\btype\s*:\s*["']website["']/);
+    expect(layoutSource).toMatch(
+      /\bopenGraph\s*:\s*\{[^}]*\burl\s*:\s*["']https:\/\/uwu\.ee\/["']/,
+    );
+    expect(layoutSource).not.toMatch(/\b(?:robots|alternates|icons)\s*:/);
+
+    expect(layoutSource).toMatch(/export\s+const\s+viewport\s*:\s*Viewport\s*=\s*\{/);
+    expect(layoutSource).toMatch(/\bwidth\s*:\s*["']device-width["']/);
+    expect(layoutSource).toMatch(/\binitialScale\s*:\s*1\b/);
+    expect(layoutSource).toMatch(/\bthemeColor\s*:\s*["']#818CF8["']/);
+    expect(layoutSource).not.toMatch(/\b(?:maximumScale|userScalable|colorScheme)\s*:/);
+  });
+
+  test("removes stale raw head artifacts without introducing duplicate tags", () => {
+    expect(existsSync(legacyHeadUrl)).toBe(false);
+    expect(layoutSource).not.toMatch(/<\s*head\b/i);
+    expect(layoutSource).not.toMatch(/<\s*(?:title|meta)\b/i);
+
+    const appSources = collectSourceFiles(new URL("../app", import.meta.url).pathname).map((path) =>
+      readFileSync(path, "utf8"),
+    );
+    expect(appSources.join("\n")).not.toMatch(
+      /<\s*meta\b[^>]*(?:name\s*=\s*["'](?:viewport|theme-color|title|description)["']|property\s*=\s*["']og:(?:type|url)["'])/i,
+    );
+  });
+});
 
 describe("root package contract", () => {
   test("keeps the package identity private", () => {
