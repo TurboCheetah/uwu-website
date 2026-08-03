@@ -186,6 +186,8 @@ const codeqlWorkflowSource = readFileSync(
 const renovateConfig = JSON.parse(
   readFileSync(new URL("../.github/renovate.json", import.meta.url), "utf8"),
 ) as RenovateConfig;
+const readmeSource = readFileSync(new URL("../README.md", import.meta.url), "utf8");
+const agentsSource = readFileSync(new URL("../AGENTS.md", import.meta.url), "utf8");
 
 function collectSourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -571,6 +573,79 @@ describe("Tailwind CSS 4 migration artifacts", () => {
       /\b(?:bg-gradient-to-b|from-transparent|to-primary\/50|underline-offset-3)\b/,
     );
     expect(globalsCss).toContain("color-mix(in srgb, var(--primary) 50%, transparent)");
+  });
+});
+
+describe("maintainer documentation artifacts", () => {
+  test("documents the supported stack, commands, auth contract, and UI invariants", () => {
+    const canonicalCommands = [
+      "bun install --frozen-lockfile",
+      "bun run dev",
+      "bun run format:check",
+      "bun run lint",
+      "bun run typecheck",
+      "bun run test",
+      "bun run build",
+    ];
+    for (const command of canonicalCommands) {
+      expect(readmeSource).toContain(command);
+      expect(agentsSource).toContain(command);
+    }
+
+    const sharedArchitectureMarkers = [
+      "Next.js 16.3",
+      "React 19.2",
+      "TypeScript 7",
+      "Tailwind CSS 4",
+      "App Router",
+      "Pages API",
+      "/api/auth",
+      "INVITE_CODE",
+      "503",
+      "AV1 MP4",
+      "WebM",
+      "fallback MP4",
+      "no-scroll",
+    ];
+    for (const marker of sharedArchitectureMarkers) {
+      expect(readmeSource).toContain(marker);
+      expect(agentsSource).toContain(marker);
+    }
+
+    const agentContractMarkers = [
+      "OXFmt",
+      "OXLint",
+      "syntax-aware",
+      "timing-safe",
+      "UTF-16",
+      "Allow: POST",
+      "400",
+      "401",
+      "200",
+      "ArrowRight",
+      "next-env.d.ts",
+      "*.tsbuildinfo",
+      "CodeQL",
+      "Renovate",
+      "Never push",
+    ];
+    for (const marker of agentContractMarkers) expect(agentsSource).toContain(marker);
+
+    const staleMarkers = [
+      /npm run/,
+      /yarn/,
+      /pnpm/,
+      /next\/font/,
+      /api\/hello/,
+      /typecheck:ci/,
+      /ESLint/,
+      /No test suite/,
+      /experimental\.appDir/,
+      /Next\.js 16\.1\.1/,
+    ];
+    for (const source of [readmeSource, agentsSource]) {
+      for (const marker of staleMarkers) expect(source).not.toMatch(marker);
+    }
   });
 });
 

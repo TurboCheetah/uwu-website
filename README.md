@@ -1,38 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# uwu.ee
 
-## Getting Started
+`uwu.ee` is the landing page for an anonymous email forwarding service. It presents an invite-code form over a responsive, no-scroll video background.
 
-First, run the development server:
+## Stack
+
+- Next.js 16.3 App Router UI with a Pages API endpoint at `/api/auth`
+- React 19.2 and strict TypeScript 7
+- Tailwind CSS 4 in CSS-first mode with ShadCN components
+- Bun 1.3.14, pinned by `packageManager`
+
+## Setup
+
+Install the pinned dependency graph and start the local server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+bun install --frozen-lockfile
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`INVITE_CODE` is a server-only environment variable used by `/api/auth`. Put it in an untracked local environment file or provide it to the server process. Never expose it to client code, logs, or commits. If it is absent, empty, or blank, authentication fails closed with status `503`.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Verification
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+bun run format:check
+bun run lint
+bun run typecheck
+bun run test
+bun run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Optionally audit the locked production dependency graph with `bun audit`.
 
-## Learn More
+## Architecture and UI contract
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The App Router owns the landing-page UI; the Pages API owns `POST /api/auth`. The page must remain responsive and no-scroll without horizontal or vertical overflow. Preserve the public background-video source order so capable browsers choose the best supported asset: AV1 MP4 (`public/assets/bg_av1.mp4`) → WebM (`public/assets/bg.webm`) → fallback MP4 (`public/assets/bg.mp4`).
