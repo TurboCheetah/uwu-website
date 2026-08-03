@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
 
 interface PackageManifest {
@@ -29,6 +30,7 @@ interface BunLock {
     string,
     {
       dependencies?: Record<string, string>;
+      devDependencies?: Record<string, string>;
     }
   >;
   packages?: Record<string, [string, ...unknown[]]>;
@@ -36,16 +38,42 @@ interface BunLock {
 
 const radixSlot = "@radix-ui/react-slot";
 const radixSlotVersion = "1.3.3";
+const runtimeDependencyPins = {
+  "@radix-ui/react-slot": "1.3.3",
+  "class-variance-authority": "0.7.1",
+  clsx: "2.1.1",
+  "lucide-react": "1.28.0",
+  next: "16.1.1",
+  react: "19.2.3",
+  "react-dom": "19.2.3",
+  sonner: "2.0.7",
+  "tailwind-merge": "3.6.0",
+} as const;
+const developmentDependencyPins = {
+  "@types/node": "26.1.2",
+  "@types/react": "19.2.18",
+  "@types/react-dom": "19.2.4",
+  typescript: "5.9.3",
+} as const;
 const packageJson = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url), "utf8"),
 ) as PackageManifest;
 const bunLock = Bun.JSONC.parse(
   readFileSync(new URL("../bun.lock", import.meta.url), "utf8"),
 ) as BunLock;
+const bunLockSource = readFileSync(new URL("../bun.lock", import.meta.url), "utf8");
 const buttonSource = readFileSync(new URL("../components/ui/button.tsx", import.meta.url), "utf8");
 const eslintConfigUrl = new URL("../eslint.config.js", import.meta.url);
 const oxfmtConfigUrl = new URL("../.oxfmtrc.json", import.meta.url);
 const oxlintConfigUrl = new URL("../.oxlintrc.json", import.meta.url);
+
+function collectSourceFiles(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) return collectSourceFiles(path);
+    return /\.[cm]?[jt]sx?$/.test(entry.name) ? [path] : [];
+  });
+}
 
 describe("root package contract", () => {
   test("keeps the package identity private", () => {
@@ -59,6 +87,37 @@ describe("root package contract", () => {
 
   test("declares Radix Slot as an exact runtime dependency", () => {
     expect(packageJson.dependencies?.[radixSlot]).toBe(radixSlotVersion);
+  });
+
+  test("pins compatible UI packages as exact runtime dependencies", () => {
+    for (const [name, version] of Object.entries(runtimeDependencyPins)) {
+      expect(packageJson.dependencies?.[name]).toBe(version);
+      expect(packageJson.devDependencies?.[name]).toBeUndefined();
+      expect(bunLock.workspaces?.[""]?.dependencies?.[name]).toBe(version);
+      expect(bunLock.packages?.[name]?.[0]).toBe(`${name}@${version}`);
+    }
+  });
+
+  test("pins type tooling as exact development dependencies", () => {
+    for (const [name, version] of Object.entries(developmentDependencyPins)) {
+      expect(packageJson.devDependencies?.[name]).toBe(version);
+      expect(packageJson.dependencies?.[name]).toBeUndefined();
+      expect(bunLock.workspaces?.[""]?.devDependencies?.[name]).toBe(version);
+      expect(bunLock.packages?.[name]?.[0]).toBe(`${name}@${version}`);
+    }
+  });
+
+  test("removes the unused legacy Next font package from artifacts and source", () => {
+    expect(packageJson.dependencies?.["@next/font"]).toBeUndefined();
+    expect(packageJson.devDependencies?.["@next/font"]).toBeUndefined();
+    expect(bunLockSource).not.toContain('"@next/font"');
+
+    const sourceFiles = ["app", "components", "pages"].flatMap((directory) =>
+      collectSourceFiles(new URL(`../${directory}`, import.meta.url).pathname),
+    );
+    for (const sourceFile of sourceFiles) {
+      expect(readFileSync(sourceFile, "utf8")).not.toMatch(/(?:@next\/font|next\/font)/);
+    }
   });
 
   test("defines the canonical package scripts", () => {
