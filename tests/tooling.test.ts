@@ -38,14 +38,17 @@ interface BunLock {
 
 const radixSlot = "@radix-ui/react-slot";
 const radixSlotVersion = "1.3.3";
+const nextReactCompatibilityPins = {
+  next: "16.3.0",
+  react: "19.2.8",
+  "react-dom": "19.2.8",
+} as const;
 const runtimeDependencyPins = {
   "@radix-ui/react-slot": "1.3.3",
   "class-variance-authority": "0.7.1",
   clsx: "2.1.1",
   "lucide-react": "1.28.0",
-  next: "16.1.1",
-  react: "19.2.3",
-  "react-dom": "19.2.3",
+  ...nextReactCompatibilityPins,
   sonner: "2.0.7",
   "tailwind-merge": "3.6.0",
 } as const;
@@ -64,6 +67,11 @@ const bunLock = Bun.JSONC.parse(
 const bunLockSource = readFileSync(new URL("../bun.lock", import.meta.url), "utf8");
 const buttonSource = readFileSync(new URL("../components/ui/button.tsx", import.meta.url), "utf8");
 const eslintConfigUrl = new URL("../eslint.config.js", import.meta.url);
+const nextConfigUrls = [
+  new URL("../next.config.js", import.meta.url),
+  new URL("../next.config.mjs", import.meta.url),
+  new URL("../next.config.ts", import.meta.url),
+];
 const oxfmtConfigUrl = new URL("../.oxfmtrc.json", import.meta.url);
 const oxlintConfigUrl = new URL("../.oxlintrc.json", import.meta.url);
 
@@ -87,6 +95,19 @@ describe("root package contract", () => {
 
   test("declares Radix Slot as an exact runtime dependency", () => {
     expect(packageJson.dependencies?.[radixSlot]).toBe(radixSlotVersion);
+  });
+
+  test("pins the Next and React compatibility group exactly", () => {
+    for (const [name, version] of Object.entries(nextReactCompatibilityPins)) {
+      expect(packageJson.dependencies?.[name]).toBe(version);
+      expect(bunLock.workspaces?.[""]?.dependencies?.[name]).toBe(version);
+      expect(bunLock.packages?.[name]?.[0]).toBe(`${name}@${version}`);
+    }
+    expect(packageJson.dependencies?.react).toBe(packageJson.dependencies?.["react-dom"]);
+  });
+
+  test("removes the obsolete App Router experiment configuration", () => {
+    for (const configUrl of nextConfigUrls) expect(existsSync(configUrl)).toBe(false);
   });
 
   test("pins compatible UI packages as exact runtime dependencies", () => {
