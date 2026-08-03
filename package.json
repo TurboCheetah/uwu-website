@@ -7,6 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "bun test",
+    "test:auth": "bun test tests/auth.test.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck:ci": "tsc --noEmit"
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
+    "@types/bun": "1.3.14",
     "autoprefixer": "^10.4.13",
     "eslint": "^9.17.0",
     "postcss": "^8.4.21",
