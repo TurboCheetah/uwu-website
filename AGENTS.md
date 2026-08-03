@@ -30,28 +30,33 @@ bun run lint:fix     # Auto-fix ESLint issues
 ## Code Style
 
 ### TypeScript
+
 - **Strict Mode**: Always enabled (tsconfig.json)
 - **Explicit Types**: Use explicit types, avoid `any` except for error handling
 - **Type Imports**: Prefer `import type { }` for type-only imports
 - **Path Aliases**: Use `#/*` for root-level imports (configured in tsconfig.json)
 
 ### Naming Conventions
+
 - **Components**: PascalCase (`MyComponent.tsx`)
 - **Functions**: camelCase (`handleSubmit`)
 - **Types/Interfaces**: PascalCase with descriptive names (`FormData`)
 - **Files**: camelCase for utilities (`utils.ts`), PascalCase for components (`MyComponent.tsx`)
 
 ### Imports
+
 - React hooks and types: `import { useState, useEffect, type ChangeEvent } from 'react'`
 - Next.js types: `import type { NextApiRequest, NextApiResponse } from 'next'`
 - Path aliases: `import { myFunction } from '#/utils/helpers'`
 
 ### Error Handling
+
 - **API Errors**: Check `res.status` and handle non-200 responses
 - **Catch Blocks**: Use `catch (err: unknown)` and narrow with type guards
 - **User Messages**: Provide user-friendly error messages in UI
 
 ### Formatting
+
 - **ESLint Config**: Uses `@antfu/eslint-config` with flat config (ESLint 9)
 - **Auto-Fix**: Run `bun run lint:fix` before committing
 - **No Formatter Config**: Follow ESLint rules (no Prettier/other formatters)
@@ -61,16 +66,19 @@ bun run lint:fix     # Auto-fix ESLint issues
 ## React/Next.js Patterns
 
 ### Component Types
+
 - **Client Components**: Add `"use client"` directive when using hooks, state, or event handlers
 - **Server Components**: Default for App Router (no directive needed)
 - **API Routes**: Use `pages/api/` directory for Next.js 13 compatibility
 
 ### State Management
+
 - Use `useState` for local component state
 - Separate UI state (alert visibility) from data state (form data)
 - Always clean up side effects in `useEffect` (timeouts, subscriptions)
 
 ### Styling
+
 - **Tailwind**: Use utility classes for layout, spacing, responsive breakpoints
 - **ShadCN UI**: Use component imports from `#/components/ui/`
 - **Theme**: Lyra style (stone base, indigo primary, no border radius)
@@ -82,25 +90,27 @@ bun run lint:fix     # Auto-fix ESLint issues
 ## Key Patterns
 
 ### Client Component Example
+
 ```tsx
-'use client'
-import { useState } from 'react'
+"use client";
+import { useState } from "react";
 
 export default function MyForm() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
   // Component logic
 }
 ```
 
 ### API Route Example
+
 ```typescript
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' })
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
   }
-  res.status(200).json({ message: 'Success' })
+  res.status(200).json({ message: "Success" });
 }
 ```
 

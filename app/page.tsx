@@ -1,47 +1,45 @@
-'use client'
-import type { ChangeEvent, FormEvent } from 'react'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { ArrowRight } from 'lucide-react'
-import { useState } from 'react'
-import { toast } from 'sonner'
+"use client";
+import type { ChangeEvent, FormEvent } from "react";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Home() {
-  const [formData, setFormData] = useState({ inviteCode: '' })
+  const [formData, setFormData] = useState({ inviteCode: "" });
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
+      const res = await fetch("/api/auth", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
 
       if (res.status === 401) {
-        toast.error('Invalid invite code', {
-          description: 'Please check your invite code and try again',
-        })
+        toast.error("Invalid invite code", {
+          description: "Please check your invite code and try again",
+        });
+      } else if (res.status === 200) {
+        toast.success("Authorized", {
+          description: "Your invite code has been validated",
+        });
       }
-      else if (res.status === 200) {
-        toast.success('Authorized', {
-          description: 'Your invite code has been validated',
-        })
-      }
+    } catch (err) {
+      toast.error("Something went wrong", {
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
     }
-    catch (err) {
-      toast.error('Something went wrong', {
-        description: err instanceof Error ? err.message : 'Unknown error',
-      })
-    }
-  }
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   return (
     <main>
@@ -61,13 +59,16 @@ export default function Home() {
             <span className="underline underline-offset-3 decoration-8 decoration-primary">
               Anonymous
               <br />
-            </span>
-            {' '}
+            </span>{" "}
             email forwarding
             <br />
             service
           </h1>
-          <form onSubmit={(e) => { void handleSubmit(e) }}>
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+          >
             <div className="flex justify-center gap-2">
               <Input
                 type="text"
@@ -76,11 +77,7 @@ export default function Home() {
                 name="inviteCode"
                 onChange={handleInputChange}
               />
-              <Button
-                type="submit"
-                variant="default"
-                className="rounded-none px-4"
-              >
+              <Button type="submit" variant="default" className="rounded-none px-4">
                 <ArrowRight className="w-6 h-6" />
               </Button>
             </div>
@@ -88,5 +85,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  )
+  );
 }
