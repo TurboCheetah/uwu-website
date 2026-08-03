@@ -53,10 +53,10 @@ export default function Home() {
         <source src="assets/bg.webm" type="video/webm" />
         <source src="assets/bg.mp4" type="video/mp4" />
       </video>
-      <div className="flex items-center justify-center h-screen bg-gradient-to-b from-transparent to-primary/50 z-10 relative">
+      <div className="flex items-center justify-center h-screen bg-primary-gradient z-10 relative">
         <div className="text-center">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl">
-            <span className="underline underline-offset-3 decoration-8 decoration-primary">
+            <span className="underline decoration-8 decoration-primary">
               Anonymous
               <br />
             </span>{" "}

@@ -65,6 +65,74 @@ const developmentDependencyPins = {
   "@types/react-dom": "19.2.4",
   typescript: "7.0.2",
 } as const;
+const tailwindDependencyPins = {
+  "@tailwindcss/postcss": "4.3.3",
+  postcss: "8.5.25",
+  tailwindcss: "4.3.3",
+} as const;
+const semanticColors = [
+  "background",
+  "foreground",
+  "card",
+  "card-foreground",
+  "popover",
+  "popover-foreground",
+  "primary",
+  "primary-foreground",
+  "secondary",
+  "secondary-foreground",
+  "muted",
+  "muted-foreground",
+  "accent",
+  "accent-foreground",
+  "destructive",
+  "destructive-foreground",
+  "border",
+  "input",
+  "ring",
+] as const;
+const lightThemeTokens = {
+  background: "0 0% 100%",
+  foreground: "222.2 84% 4.9%",
+  card: "0 0% 100%",
+  "card-foreground": "222.2 84% 4.9%",
+  popover: "0 0% 100%",
+  "popover-foreground": "222.2 84% 4.9%",
+  primary: "262.1 83.3% 57.8%",
+  "primary-foreground": "210 40% 98%",
+  secondary: "210 40% 96.1%",
+  "secondary-foreground": "222.2 47.4% 11.2%",
+  muted: "210 40% 96.1%",
+  "muted-foreground": "215.4 16.3% 46.9%",
+  accent: "210 40% 96.1%",
+  "accent-foreground": "222.2 47.4% 11.2%",
+  destructive: "0 84.2% 60.2%",
+  "destructive-foreground": "210 40% 98%",
+  border: "214.3 31.8% 91.4%",
+  input: "214.3 31.8% 91.4%",
+  ring: "262.1 83.3% 57.8%",
+} as const;
+const darkThemeTokens = {
+  background: "222.2 84% 4.9%",
+  foreground: "210 40% 98%",
+  card: "222.2 84% 4.9%",
+  "card-foreground": "210 40% 98%",
+  popover: "222.2 84% 4.9%",
+  "popover-foreground": "210 40% 98%",
+  primary: "263.4 70% 50.4%",
+  "primary-foreground": "210 40% 98%",
+  secondary: "217.2 32.6% 17.5%",
+  "secondary-foreground": "210 40% 98%",
+  muted: "217.2 32.6% 17.5%",
+  "muted-foreground": "215 20.2% 65.1%",
+  accent: "217.2 32.6% 17.5%",
+  "accent-foreground": "210 40% 98%",
+  destructive: "0 62.8% 30.6%",
+  "destructive-foreground": "210 40% 98%",
+  border: "217.2 32.6% 17.5%",
+  input: "217.2 32.6% 17.5%",
+  ring: "263.4 70% 50.4%",
+} as const;
 const packageJson = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url), "utf8"),
 ) as PackageManifest;
@@ -77,6 +145,8 @@ const tsconfig = JSON.parse(
   readFileSync(new URL("../tsconfig.json", import.meta.url), "utf8"),
 ) as TypeScriptConfig;
 const buttonSource = readFileSync(new URL("../components/ui/button.tsx", import.meta.url), "utf8");
+const inputSource = readFileSync(new URL("../components/ui/input.tsx", import.meta.url), "utf8");
+const pageSource = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 const eslintConfigUrl = new URL("../eslint.config.js", import.meta.url);
 const nextConfigUrls = [
   new URL("../next.config.js", import.meta.url),
@@ -85,6 +155,13 @@ const nextConfigUrls = [
 ];
 const oxfmtConfigUrl = new URL("../.oxfmtrc.json", import.meta.url);
 const oxlintConfigUrl = new URL("../.oxlintrc.json", import.meta.url);
+const globalsCss = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+const componentsConfig = JSON.parse(
+  readFileSync(new URL("../components.json", import.meta.url), "utf8"),
+) as { tailwind?: { config?: string } };
+const postcssConfigUrl = new URL("../postcss.config.mjs", import.meta.url);
+const legacyPostcssConfigUrl = new URL("../postcss.config.cjs", import.meta.url);
+const tailwindConfigUrl = new URL("../tailwind.config.js", import.meta.url);
 
 function collectSourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -255,6 +332,75 @@ describe("Oxc tooling artifacts", () => {
       },
     });
     expect(JSON.stringify(config)).not.toMatch(/typeAware|tsgolint|experimental/i);
+  });
+});
+
+describe("Tailwind CSS 4 migration artifacts", () => {
+  test("pins the exact CSS toolchain identities without Autoprefixer", () => {
+    for (const [name, version] of Object.entries(tailwindDependencyPins)) {
+      expect(packageJson.devDependencies?.[name]).toBe(version);
+      expect(packageJson.dependencies?.[name]).toBeUndefined();
+      expect(bunLock.workspaces?.[""]?.devDependencies?.[name]).toBe(version);
+      expect(bunLock.packages?.[name]?.[0]).toBe(`${name}@${version}`);
+    }
+    expect(packageJson.devDependencies?.autoprefixer).toBeUndefined();
+    expect(packageJson.dependencies?.autoprefixer).toBeUndefined();
+    expect(bunLock.packages?.autoprefixer).toBeUndefined();
+  });
+
+  test("uses only the framework-native ESM PostCSS plugin", () => {
+    expect(existsSync(postcssConfigUrl)).toBe(true);
+    expect(existsSync(legacyPostcssConfigUrl)).toBe(false);
+    const source = existsSync(postcssConfigUrl) ? readFileSync(postcssConfigUrl, "utf8") : "";
+    expect(source).toBe(
+      'export default {\n  plugins: {\n    "@tailwindcss/postcss": {},\n  },\n};\n',
+    );
+  });
+
+  test("removes legacy Tailwind configuration and selects CSS-first ShadCN configuration", () => {
+    expect(existsSync(tailwindConfigUrl)).toBe(false);
+    expect(componentsConfig.tailwind?.config).toBe("");
+  });
+
+  test("uses CSS-first Tailwind directives and preserves semantic theme mappings", () => {
+    expect(globalsCss).toContain('@import "tailwindcss";');
+    expect(globalsCss).toContain("@custom-variant dark (&:is(.dark *));");
+    expect(globalsCss).toContain("@theme inline {");
+    expect(globalsCss).toMatch(
+      /--font-sans:\s+ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",/,
+    );
+    expect(globalsCss).not.toMatch(/@tailwind\b|@config\b|oklch\(/i);
+    for (const color of semanticColors) {
+      expect(globalsCss).toContain(`--color-${color}: var(--${color});`);
+    }
+    expect(globalsCss).toContain("--radius-sm: calc(var(--radius) - 4px);");
+    expect(globalsCss).toContain("--radius-md: calc(var(--radius) - 2px);");
+    expect(globalsCss).toContain("--radius-lg: var(--radius);");
+  });
+
+  test("preserves every exact HSL coordinate and legacy radius semantic", () => {
+    for (const [name, coordinates] of Object.entries(lightThemeTokens)) {
+      expect(globalsCss).toContain(`--${name}: hsl(${coordinates});`);
+    }
+    for (const [name, coordinates] of Object.entries(darkThemeTokens)) {
+      expect(globalsCss).toContain(`--${name}: hsl(${coordinates});`);
+    }
+    expect(globalsCss).toContain("--radius: 0rem;");
+    expect(globalsCss).not.toMatch(/hsl\(\s*var\(--/);
+  });
+
+  test("preserves the v3 system font stack and accessible hidden outlines", () => {
+    expect(buttonSource).toContain("outline-hidden");
+    expect(inputSource).toContain("outline-hidden");
+    expect(`${buttonSource}\n${inputSource}`).not.toMatch(/\boutline-none\b/);
+  });
+
+  test("preserves the legacy underline and sRGB gradient rendering", () => {
+    expect(pageSource).toContain("bg-primary-gradient");
+    expect(pageSource).not.toMatch(
+      /\b(?:bg-gradient-to-b|from-transparent|to-primary\/50|underline-offset-3)\b/,
+    );
+    expect(globalsCss).toContain("color-mix(in srgb, var(--primary) 50%, transparent)");
   });
 });
 
