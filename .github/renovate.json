@@ -12,7 +12,52 @@
   "schedule": [
     "before 12pm on Sunday"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|\/)package\\.json$/"
+      ],
+      "matchStrings": [
+        "\"packageManager\"\\s*:\\s*\"bun@(?<currentValue>[^\"\\s]+)\""
+      ],
+      "depNameTemplate": "bun",
+      "datasourceTemplate": "npm",
+      "versioningTemplate": "semver"
+    }
+  ],
   "packageRules": [
+    {
+      "groupName": "Bun",
+      "matchPackageNames": [
+        "bun",
+        "@types/bun"
+      ]
+    },
+    {
+      "groupName": "Next.js and React",
+      "matchPackageNames": [
+        "next",
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ]
+    },
+    {
+      "groupName": "Tailwind CSS",
+      "matchPackageNames": [
+        "tailwindcss",
+        "@tailwindcss/postcss"
+      ]
+    },
+    {
+      "groupName": "Oxc tooling",
+      "matchPackageNames": [
+        "oxfmt",
+        "oxlint"
+      ]
+    },
     {
       "matchUpdateTypes": [
         "minor",

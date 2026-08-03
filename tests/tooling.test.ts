@@ -43,6 +43,16 @@ interface TypeScriptConfig {
   exclude?: string[];
 }
 
+interface RenovateConfig {
+  extends?: string[];
+  labels?: string[];
+  schedule?: string[];
+  customManagers?: Array<Record<string, unknown>>;
+  packageRules?: Array<Record<string, unknown>>;
+  vulnerabilityAlerts?: unknown;
+  osvVulnerabilityAlerts?: unknown;
+}
+
 const radixSlot = "@radix-ui/react-slot";
 const radixSlotVersion = "1.3.3";
 const nextReactCompatibilityPins = {
@@ -165,6 +175,17 @@ const componentsConfig = JSON.parse(
 const postcssConfigUrl = new URL("../postcss.config.mjs", import.meta.url);
 const legacyPostcssConfigUrl = new URL("../postcss.config.cjs", import.meta.url);
 const tailwindConfigUrl = new URL("../tailwind.config.js", import.meta.url);
+const ciWorkflowSource = readFileSync(
+  new URL("../.github/workflows/ci.yml", import.meta.url),
+  "utf8",
+);
+const codeqlWorkflowSource = readFileSync(
+  new URL("../.github/workflows/codeql-analysis.yml", import.meta.url),
+  "utf8",
+);
+const renovateConfig = JSON.parse(
+  readFileSync(new URL("../.github/renovate.json", import.meta.url), "utf8"),
+) as RenovateConfig;
 
 function collectSourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -280,8 +301,118 @@ describe("root package contract", () => {
       lint: "oxlint .",
       "lint:fix": "oxlint --fix .",
       typecheck: "tsc --noEmit",
-      "typecheck:ci": "tsc --noEmit",
     });
+  });
+});
+
+describe("repository automation artifacts", () => {
+  const checkout = "actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98";
+  const setupBun = "oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979";
+  const cache = "actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb";
+  const codeqlDigest = "5d4e8d1aca955e8d8589aabd499c5cae939e33c7";
+  const concurrency =
+    "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}";
+
+  test("runs one pinned, least-privilege CI quality job for every ref", () => {
+    expect(ciWorkflowSource).toMatch(/push:\s*\n\s*branches: \["\*\*"\]\s*\n\s*tags: \["\*\*"\]/);
+    expect(ciWorkflowSource).toMatch(/pull_request:\s*\n\s*branches: \["\*\*"\]/);
+    expect(ciWorkflowSource).toContain("permissions:\n  contents: read");
+    expect(ciWorkflowSource).toContain(`group: ${concurrency}`);
+    expect(ciWorkflowSource).toContain("cancel-in-progress: true");
+    expect(ciWorkflowSource).toMatch(/jobs:\s*\n  quality:\s*\n/);
+    const jobsSource = ciWorkflowSource.split("\njobs:\n", 2)[1] ?? "";
+    expect([...jobsSource.matchAll(/^  [a-z][\w-]*:\s*$/gm)].map(([job]) => job.trim())).toEqual([
+      "quality:",
+    ]);
+    expect(ciWorkflowSource).toContain("runs-on: ubuntu-latest");
+    expect(ciWorkflowSource).toContain("timeout-minutes: 20");
+    expect(ciWorkflowSource).toContain(`uses: ${checkout}`);
+    expect(ciWorkflowSource).toContain(`uses: ${setupBun} # v2`);
+    expect(ciWorkflowSource).toContain(`uses: ${cache} # v5`);
+    expect(ciWorkflowSource).not.toContain("bun-version:");
+    expect(ciWorkflowSource.match(/oven-sh\/setup-bun@/g)).toHaveLength(1);
+    expect(ciWorkflowSource).not.toContain("GITHUB_TOKEN");
+
+    const commands = [...ciWorkflowSource.matchAll(/^\s+run: (.+)$/gm)].map((match) => match[1]);
+    expect(commands).toEqual([
+      "bun install --frozen-lockfile",
+      "bun run format:check",
+      "bun run lint",
+      "bun run typecheck",
+      "bun run test",
+      "bun run build",
+    ]);
+  });
+
+  test("uses a concise pinned advanced CodeQL workflow for JavaScript and TypeScript", () => {
+    expect(codeqlWorkflowSource).toMatch(/push:\s*\n\s*branches: \["\*\*"\]/);
+    expect(codeqlWorkflowSource).toMatch(/pull_request:\s*\n\s*branches: \["\*\*"\]/);
+    expect(codeqlWorkflowSource).not.toMatch(/push:[\s\S]*?tags:/);
+    expect(codeqlWorkflowSource).toContain('cron: "28 14 * * 1"');
+    expect(codeqlWorkflowSource).toContain("permissions: {}");
+    expect(codeqlWorkflowSource).toContain(`group: ${concurrency}`);
+    expect(codeqlWorkflowSource).toContain("cancel-in-progress: true");
+    expect(codeqlWorkflowSource).toContain("name: JS/TS");
+    expect(codeqlWorkflowSource).toContain("timeout-minutes: 15");
+    expect(codeqlWorkflowSource).toMatch(
+      /permissions:\s*\n\s*contents: read\s*\n\s*security-events: write/,
+    );
+    expect(codeqlWorkflowSource).toContain(`uses: ${checkout}`);
+    expect(codeqlWorkflowSource).toContain(`uses: github/codeql-action/init@${codeqlDigest} # v4`);
+    expect(codeqlWorkflowSource).toContain("languages: javascript-typescript");
+    expect(codeqlWorkflowSource).toContain("build-mode: none");
+    expect(codeqlWorkflowSource).toContain(
+      `uses: github/codeql-action/analyze@${codeqlDigest} # v4`,
+    );
+    expect(codeqlWorkflowSource).not.toMatch(/autobuild|matrix|boilerplate/i);
+  });
+
+  test("pins every GitHub Action reference to a full commit digest", () => {
+    const actionUses =
+      `${ciWorkflowSource}\n${codeqlWorkflowSource}`.match(/^\s*-?\s*uses:\s*\S+/gm) ?? [];
+    expect(actionUses.length).toBeGreaterThan(0);
+    for (const use of actionUses) expect(use).toMatch(/@[0-9a-f]{40}(?:\s|$)/);
+  });
+
+  test("groups coupled Renovate updates and tracks the root Bun packageManager", () => {
+    expect(renovateConfig.extends).toEqual([
+      "config:recommended",
+      "helpers:pinGitHubActionDigests",
+      "group:allNonMajor",
+    ]);
+    expect(renovateConfig.labels).toEqual(["Meta: Dependencies"]);
+    expect(renovateConfig.schedule).toEqual(["before 12pm on Sunday"]);
+    expect(renovateConfig.customManagers).toEqual([
+      {
+        customType: "regex",
+        managerFilePatterns: ["/(^|/)package\\.json$/"],
+        matchStrings: ['"packageManager"\\s*:\\s*"bun@(?<currentValue>[^"\\s]+)"'],
+        depNameTemplate: "bun",
+        datasourceTemplate: "npm",
+        versioningTemplate: "semver",
+      },
+    ]);
+
+    const groupRules = renovateConfig.packageRules?.filter((rule) => "groupName" in rule);
+    expect(groupRules).toEqual([
+      { groupName: "Bun", matchPackageNames: ["bun", "@types/bun"] },
+      {
+        groupName: "Next.js and React",
+        matchPackageNames: ["next", "react", "react-dom", "@types/react", "@types/react-dom"],
+      },
+      {
+        groupName: "Tailwind CSS",
+        matchPackageNames: ["tailwindcss", "@tailwindcss/postcss"],
+      },
+      { groupName: "Oxc tooling", matchPackageNames: ["oxfmt", "oxlint"] },
+    ]);
+    expect(renovateConfig.packageRules).toContainEqual({
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      automerge: true,
+    });
+    expect(renovateConfig.vulnerabilityAlerts).toBeUndefined();
+    expect(renovateConfig.osvVulnerabilityAlerts).toBeUndefined();
+    expect(JSON.stringify(renovateConfig)).not.toMatch(/security label/i);
   });
 });
 
