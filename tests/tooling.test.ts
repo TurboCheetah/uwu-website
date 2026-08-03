@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "bun:test";
@@ -36,6 +37,12 @@ interface BunLock {
   packages?: Record<string, [string, ...unknown[]]>;
 }
 
+interface TypeScriptConfig {
+  compilerOptions?: Record<string, unknown>;
+  include?: string[];
+  exclude?: string[];
+}
+
 const radixSlot = "@radix-ui/react-slot";
 const radixSlotVersion = "1.3.3";
 const nextReactCompatibilityPins = {
@@ -56,7 +63,7 @@ const developmentDependencyPins = {
   "@types/node": "26.1.2",
   "@types/react": "19.2.18",
   "@types/react-dom": "19.2.4",
-  typescript: "5.9.3",
+  typescript: "7.0.2",
 } as const;
 const packageJson = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url), "utf8"),
@@ -65,6 +72,10 @@ const bunLock = Bun.JSONC.parse(
   readFileSync(new URL("../bun.lock", import.meta.url), "utf8"),
 ) as BunLock;
 const bunLockSource = readFileSync(new URL("../bun.lock", import.meta.url), "utf8");
+const gitignoreSource = readFileSync(new URL("../.gitignore", import.meta.url), "utf8");
+const tsconfig = JSON.parse(
+  readFileSync(new URL("../tsconfig.json", import.meta.url), "utf8"),
+) as TypeScriptConfig;
 const buttonSource = readFileSync(new URL("../components/ui/button.tsx", import.meta.url), "utf8");
 const eslintConfigUrl = new URL("../eslint.config.js", import.meta.url);
 const nextConfigUrls = [
@@ -155,6 +166,51 @@ describe("root package contract", () => {
       typecheck: "tsc --noEmit",
       "typecheck:ci": "tsc --noEmit",
     });
+  });
+});
+
+describe("TypeScript 7 migration artifacts", () => {
+  test("pins the exact native TypeScript compiler identity", () => {
+    expect(packageJson.devDependencies?.typescript).toBe("7.0.2");
+    expect(bunLock.workspaces?.[""]?.devDependencies?.typescript).toBe("7.0.2");
+    expect(bunLock.packages?.typescript?.[0]).toBe("typescript@7.0.2");
+  });
+
+  test("uses the exact Next-compatible compiler contract", () => {
+    expect(tsconfig.compilerOptions).toMatchObject({
+      target: "ES2017",
+      moduleResolution: "Bundler",
+      types: ["bun"],
+      strict: true,
+      noEmit: true,
+      plugins: [{ name: "next" }],
+      paths: { "#/*": ["./*"] },
+      lib: ["dom", "dom.iterable", "esnext"],
+    });
+    expect(tsconfig.compilerOptions?.baseUrl).toBeUndefined();
+    expect(String(tsconfig.compilerOptions?.target).toLowerCase()).not.toBe("es5");
+    expect(String(tsconfig.compilerOptions?.moduleResolution).toLowerCase()).not.toMatch(
+      /^(?:node|node10)$/,
+    );
+    expect(tsconfig.include).toEqual([
+      "next-env.d.ts",
+      "**/*.ts",
+      "**/*.tsx",
+      ".next/types/**/*.ts",
+      ".next/dev/types/**/*.ts",
+    ]);
+    expect(tsconfig.exclude).toEqual(["node_modules", "temp-shadcn-demo"]);
+  });
+
+  test("ignores generated TypeScript artifacts without tracking them", () => {
+    expect(gitignoreSource.split(/\r?\n/)).toContain("next-env.d.ts");
+    expect(gitignoreSource.split(/\r?\n/)).toContain("*.tsbuildinfo");
+    expect(
+      execFileSync("git", ["ls-files", "--", "next-env.d.ts", "tsconfig.tsbuildinfo"], {
+        cwd: new URL("..", import.meta.url),
+        encoding: "utf8",
+      }),
+    ).toBe("");
   });
 });
 
