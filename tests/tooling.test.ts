@@ -408,10 +408,36 @@ describe("repository automation artifacts", () => {
       },
       { groupName: "Oxc tooling", matchPackageNames: ["oxfmt", "oxlint"] },
     ]);
+    const automergeRules = renovateConfig.packageRules?.filter((rule) => rule.automerge === true);
+    expect(automergeRules).toEqual([
+      {
+        matchManagers: ["bun"],
+        matchUpdateTypes: ["minor", "patch", "pin"],
+        automerge: true,
+      },
+    ]);
     expect(renovateConfig.packageRules).toContainEqual({
-      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
-      automerge: true,
+      matchManagers: ["github-actions"],
+      automerge: false,
     });
+    expect(renovateConfig.packageRules).toContainEqual({
+      matchJsonata: ["$exists(vulnerabilityFixVersion)"],
+      automerge: false,
+    });
+
+    const rules = renovateConfig.packageRules ?? [];
+    const automergeIndex = rules.findIndex((rule) => rule.automerge === true);
+    const githubActionsIndex = rules.findIndex(
+      (rule) => Array.isArray(rule.matchManagers) && rule.matchManagers.includes("github-actions"),
+    );
+    const vulnerabilityIndex = rules.findIndex(
+      (rule) =>
+        Array.isArray(rule.matchJsonata) &&
+        rule.matchJsonata.includes("$exists(vulnerabilityFixVersion)"),
+    );
+    expect(githubActionsIndex).toBeGreaterThan(automergeIndex);
+    expect(vulnerabilityIndex).toBeGreaterThan(automergeIndex);
+    expect(JSON.stringify(automergeRules)).not.toMatch(/digest|github-actions|custom\.regex/);
     expect(renovateConfig.vulnerabilityAlerts).toBeUndefined();
     expect(renovateConfig.osvVulnerabilityAlerts).toBeUndefined();
     expect(JSON.stringify(renovateConfig)).not.toMatch(/security label/i);
@@ -574,6 +600,11 @@ describe("Tailwind CSS 4 migration artifacts", () => {
     );
     expect(globalsCss).toContain("color-mix(in srgb, var(--primary) 50%, transparent)");
   });
+
+  test("preserves the legacy submit-arrow geometry under Tailwind 4", () => {
+    expect(pageSource).toMatch(/<ArrowRight\s+className="size-6"\s*\/>/);
+    expect(pageSource).not.toMatch(/<ArrowRight[^>]*\b(?:w-6|h-6)\b/);
+  });
 });
 
 describe("maintainer documentation artifacts", () => {
@@ -645,6 +676,10 @@ describe("maintainer documentation artifacts", () => {
     ];
     for (const source of [readmeSource, agentsSource]) {
       for (const marker of staleMarkers) expect(source).not.toMatch(marker);
+      expect(source).not.toMatch(/without horizontal or vertical overflow/i);
+      expect(source).not.toMatch(/for horizontal or vertical overflow/i);
+      expect(source).toMatch(/hidden overflow/i);
+      expect(source).toMatch(/horizontal clipping/i);
     }
   });
 });

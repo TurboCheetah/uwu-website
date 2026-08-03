@@ -2,6 +2,7 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
+import { getAuthFeedback } from "#/lib/auth-feedback";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -21,18 +22,11 @@ export default function Home() {
         body: JSON.stringify(formData),
       });
 
-      if (res.status === 401) {
-        toast.error("Invalid invite code", {
-          description: "Please check your invite code and try again",
-        });
-      } else if (res.status === 200) {
-        toast.success("Authorized", {
-          description: "Your invite code has been validated",
-        });
-      }
-    } catch (err) {
+      const feedback = getAuthFeedback(res.status);
+      toast[feedback.kind](feedback.title, { description: feedback.description });
+    } catch {
       toast.error("Something went wrong", {
-        description: err instanceof Error ? err.message : "Unknown error",
+        description: "Please try again later",
       });
     }
   };
@@ -78,7 +72,7 @@ export default function Home() {
                 onChange={handleInputChange}
               />
               <Button type="submit" variant="default" className="rounded-none px-4">
-                <ArrowRight className="w-6 h-6" />
+                <ArrowRight className="size-6" />
               </Button>
             </div>
           </form>

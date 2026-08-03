@@ -59,17 +59,31 @@
       ]
     },
     {
+      "matchManagers": [
+        "bun"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch",
-        "pin",
-        "digest"
+        "pin"
       ],
       "automerge": true
     },
     {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "automerge": false
+    },
+    {
       "matchUpdateTypes": [
         "major"
+      ],
+      "automerge": false
+    },
+    {
+      "matchJsonata": [
+        "$exists(vulnerabilityFixVersion)"
       ],
       "automerge": false
     }

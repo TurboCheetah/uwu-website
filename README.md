@@ -36,4 +36,4 @@ Optionally audit the locked production dependency graph with `bun audit`.
 
 ## Architecture and UI contract
 
-The App Router owns the landing-page UI; the Pages API owns `POST /api/auth`. The page must remain responsive and no-scroll without horizontal or vertical overflow. Preserve the public background-video source order so capable browsers choose the best supported asset: AV1 MP4 (`public/assets/bg_av1.mp4`) → WebM (`public/assets/bg.webm`) → fallback MP4 (`public/assets/bg.mp4`).
+The App Router owns the landing-page UI; the Pages API owns `POST /api/auth`. The page intentionally prevents user-visible scrolling with hidden overflow, even though its document geometry may extend vertically. Check viewport behavior and guard against accidental horizontal clipping rather than requiring a literal zero-overflow document. Preserve the public background-video source order so capable browsers choose the best supported asset: AV1 MP4 (`public/assets/bg_av1.mp4`) → WebM (`public/assets/bg.webm`) → fallback MP4 (`public/assets/bg.mp4`).

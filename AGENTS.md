@@ -62,7 +62,7 @@ Do not trim or normalize accepted values: surrounding whitespace, Unicode, and d
 - Keep Tailwind CSS 4 CSS-first configuration in `app/globals.css`; do not recreate a JavaScript Tailwind config.
 - Preserve the semantic HSL token coordinates, `--radius: 0rem`, system font stack, accessible hidden outlines, and the sRGB `color-mix` gradient compatibility behavior.
 - Preserve the centered heading, invite-code form, ShadCN `Input` and `Button`, and `ArrowRight` submit icon.
-- The landing page is a responsive no-scroll viewport. Check narrow and short screens for horizontal or vertical overflow whenever layout classes change.
+- The landing page is an intentional no-scroll viewport with hidden overflow; its document geometry can still extend vertically. On narrow and short screens, verify viewport behavior and guard against accidental horizontal clipping whenever layout classes change.
 - Preserve this exact public video source order and assets: AV1 MP4 (`public/assets/bg_av1.mp4`) → WebM (`public/assets/bg.webm`) → fallback MP4 (`public/assets/bg.mp4`).
 
 ## Automation and dependency updates
