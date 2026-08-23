@@ -309,8 +309,8 @@ describe("root package contract", () => {
 
 describe("repository automation artifacts", () => {
   const checkout = "actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98";
-  const setupBun = "oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979";
-  const cache = "actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb";
+  const setupBun = "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6";
+  const cache = "actions/cache@caa296126883cff596d87d8935842f9db880ef25";
   const codeqlDigest = "5d4e8d1aca955e8d8589aabd499c5cae939e33c7";
   const concurrency =
     "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}";
@@ -381,6 +381,7 @@ describe("repository automation artifacts", () => {
       "config:recommended",
       "helpers:pinGitHubActionDigests",
       "group:allNonMajor",
+      ":enableVulnerabilityAlerts",
     ]);
     expect(renovateConfig.labels).toEqual(["Meta: Dependencies"]);
     expect(renovateConfig.schedule).toEqual(["before 12pm on Sunday"]);
@@ -421,6 +422,10 @@ describe("repository automation artifacts", () => {
       automerge: false,
     });
     expect(renovateConfig.packageRules).toContainEqual({
+      matchUpdateTypes: ["major"],
+      automerge: false,
+    });
+    expect(renovateConfig.packageRules).toContainEqual({
       matchJsonata: ["$exists(vulnerabilityFixVersion)"],
       automerge: false,
     });
@@ -438,9 +443,11 @@ describe("repository automation artifacts", () => {
     expect(githubActionsIndex).toBeGreaterThan(automergeIndex);
     expect(vulnerabilityIndex).toBeGreaterThan(automergeIndex);
     expect(JSON.stringify(automergeRules)).not.toMatch(/digest|github-actions|custom\.regex/);
-    expect(renovateConfig.vulnerabilityAlerts).toBeUndefined();
-    expect(renovateConfig.osvVulnerabilityAlerts).toBeUndefined();
-    expect(JSON.stringify(renovateConfig)).not.toMatch(/security label/i);
+    expect(renovateConfig.osvVulnerabilityAlerts).toBe(true);
+    expect(renovateConfig.vulnerabilityAlerts).toEqual({
+      addLabels: ["security"],
+      vulnerabilityFixStrategy: "lowest",
+    });
   });
 });
 

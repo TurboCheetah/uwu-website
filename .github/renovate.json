@@ -6,21 +6,13 @@
     "group:allNonMajor",
     ":enableVulnerabilityAlerts"
   ],
-  "labels": [
-    "Meta: Dependencies"
-  ],
-  "schedule": [
-    "before 12pm on Sunday"
-  ],
+  "labels": ["Meta: Dependencies"],
+  "schedule": ["before 12pm on Sunday"],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|\/)package\\.json$/"
-      ],
-      "matchStrings": [
-        "\"packageManager\"\\s*:\\s*\"bun@(?<currentValue>[^\"\\s]+)\""
-      ],
+      "managerFilePatterns": ["/(^|\/)package\\.json$/"],
+      "matchStrings": ["\"packageManager\"\\s*:\\s*\"bun@(?<currentValue>[^\"\\s]+)\""],
       "depNameTemplate": "bun",
       "datasourceTemplate": "npm",
       "versioningTemplate": "semver"
@@ -29,70 +21,41 @@
   "packageRules": [
     {
       "groupName": "Bun",
-      "matchPackageNames": [
-        "bun",
-        "@types/bun"
-      ]
+      "matchPackageNames": ["bun", "@types/bun"]
     },
     {
       "groupName": "Next.js and React",
-      "matchPackageNames": [
-        "next",
-        "react",
-        "react-dom",
-        "@types/react",
-        "@types/react-dom"
-      ]
+      "matchPackageNames": ["next", "react", "react-dom", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "Tailwind CSS",
-      "matchPackageNames": [
-        "tailwindcss",
-        "@tailwindcss/postcss"
-      ]
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/postcss"]
     },
     {
       "groupName": "Oxc tooling",
-      "matchPackageNames": [
-        "oxfmt",
-        "oxlint"
-      ]
+      "matchPackageNames": ["oxfmt", "oxlint"]
     },
     {
-      "matchManagers": [
-        "bun"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin"
-      ],
+      "matchManagers": ["bun"],
+      "matchUpdateTypes": ["minor", "patch", "pin"],
       "automerge": true
     },
     {
-      "matchManagers": [
-        "github-actions"
-      ],
+      "matchManagers": ["github-actions"],
       "automerge": false
     },
     {
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchUpdateTypes": ["major"],
       "automerge": false
     },
     {
-      "matchJsonata": [
-        "$exists(vulnerabilityFixVersion)"
-      ],
+      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
       "automerge": false
     }
   ],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "addLabels": [
-      "security"
-    ],
+    "addLabels": ["security"],
     "vulnerabilityFixStrategy": "lowest"
   }
 }
