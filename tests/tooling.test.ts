@@ -53,6 +53,35 @@ interface RenovateConfig {
   osvVulnerabilityAlerts?: unknown;
 }
 
+interface WorkflowStep {
+  name?: string;
+  run?: string;
+  uses?: string;
+  with?: Record<string, unknown>;
+  env?: Record<string, unknown>;
+}
+
+interface WorkflowJob {
+  name?: string;
+  "runs-on"?: string;
+  "timeout-minutes"?: number;
+  permissions?: Record<string, string>;
+  steps: WorkflowStep[];
+}
+
+interface CiWorkflow {
+  on: {
+    push: { branches: string[]; tags: string[] };
+    pull_request: { branches: string[] };
+  };
+  permissions: Record<string, string>;
+  concurrency: {
+    group: string;
+    "cancel-in-progress": boolean;
+  };
+  jobs: Record<string, WorkflowJob>;
+}
+
 const radixSlot = "@radix-ui/react-slot";
 const radixSlotVersion = "1.3.3";
 const nextReactCompatibilityPins = {
@@ -244,6 +273,12 @@ describe("root package contract", () => {
     expect(packageJson.packageManager).toBe("bun@1.4.0");
   });
 
+  test("keeps @types/bun synchronized with packageManager", () => {
+    expect(packageJson.devDependencies?.["@types/bun"]).toBe(
+      packageJson.packageManager?.replace("bun@", ""),
+    );
+  });
+
   test("declares Radix Slot as an exact runtime dependency", () => {
     expect(packageJson.dependencies?.[radixSlot]).toBe(radixSlotVersion);
   });
@@ -332,9 +367,23 @@ describe("repository automation artifacts", () => {
     expect(ciWorkflowSource).toContain(`uses: ${checkout}`);
     expect(ciWorkflowSource).toContain(`uses: ${setupBun} # v2`);
     expect(ciWorkflowSource).toContain(`uses: ${cache} # v6`);
-    expect(ciWorkflowSource).not.toContain("bun-version:");
     expect(ciWorkflowSource.match(/oven-sh\/setup-bun@/g)).toHaveLength(1);
     expect(ciWorkflowSource).not.toContain("GITHUB_TOKEN");
+
+    const ciWorkflow = Bun.YAML.parse(ciWorkflowSource) as CiWorkflow;
+    expect(Object.keys(ciWorkflow.jobs)).toEqual(["quality"]);
+    expect(ciWorkflow.jobs.quality).toMatchObject({
+      name: "Quality",
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 20,
+      permissions: { contents: "read" },
+    });
+    expect(
+      ciWorkflow.jobs.quality?.steps.find((step) => step.uses?.startsWith("oven-sh/setup-bun@"))
+        ?.with,
+    ).toEqual({
+      "bun-version": packageJson.packageManager?.replace("bun@", ""),
+    });
 
     const commands = [...ciWorkflowSource.matchAll(/^\s+run: (.+)$/gm)].map((match) => match[1]);
     expect(commands).toEqual([
@@ -390,16 +439,17 @@ describe("repository automation artifacts", () => {
       {
         customType: "regex",
         managerFilePatterns: ["/(^|/)package\\.json$/"],
-        matchStrings: ['"packageManager"\\s*:\\s*"bun@(?<currentValue>[^"\\s]+)"'],
+        matchStrings: ['\\"packageManager\\"\\s*:\\s*\\"bun@(?<currentValue>[^\\"]+)\\"'],
         depNameTemplate: "bun",
         datasourceTemplate: "npm",
         versioningTemplate: "semver",
+        autoReplaceStringTemplate: '"packageManager": "bun@{{{newValue}}}"',
       },
     ]);
 
     const groupRules = renovateConfig.packageRules?.filter((rule) => "groupName" in rule);
     expect(groupRules).toEqual([
-      { groupName: "Bun", matchPackageNames: ["bun", "@types/bun"] },
+      { groupName: "Bun runtime", matchPackageNames: ["bun", "@types/bun"] },
       {
         groupName: "Next.js and React",
         matchPackageNames: ["next", "react", "react-dom", "@types/react", "@types/react-dom"],
@@ -631,7 +681,10 @@ describe("maintainer documentation artifacts", () => {
       expect(agentsSource).toContain(command);
     }
 
+    const bunRuntimeVersion = packageJson.packageManager?.replace("bun@", "") ?? "";
+    expect(bunRuntimeVersion).toMatch(/^\d+\.\d+\.\d+$/);
     const sharedArchitectureMarkers = [
+      `Bun ${bunRuntimeVersion}`,
       "Next.js 16.3",
       "React 19.2",
       "TypeScript 7",

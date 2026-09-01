@@ -7,7 +7,7 @@
 - Next.js 16.3 App Router UI with a Pages API endpoint at `/api/auth`
 - React 19.2 and strict TypeScript 7
 - Tailwind CSS 4 in CSS-first mode with ShadCN components
-- Bun 1.3.14, pinned by `packageManager`
+- Bun 1.4.0, pinned by `packageManager`
 
 ## Setup
 

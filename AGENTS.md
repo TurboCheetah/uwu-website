@@ -4,7 +4,7 @@ Pragmatic maintainer guide for `uwu.ee`, the anonymous email forwarding landing 
 
 ## Architecture
 
-- Bun 1.3.14 manages a frozen lockfile.
+- Bun 1.4.0 manages a frozen lockfile.
 - Next.js 16.3 and React 19.2 render the landing page through the App Router in `app/`.
 - The Pages API route `pages/api/auth.ts` serves `/api/auth`.
 - Strict TypeScript 7 uses the Next plugin and Bundler module resolution.
@@ -67,7 +67,7 @@ Do not trim or normalize accepted values: surrounding whitespace, Unicode, and d
 
 ## Automation and dependency updates
 
-CI performs a frozen install followed by formatting, lint, typecheck, full tests, and build. CodeQL scans JavaScript/TypeScript with least-privilege permissions. Renovate groups coupled Bun, Next/React, Tailwind, and Oxc updates and may automerge eligible non-major updates. Keep automation changes scoped and verify pinned action digests if automation is intentionally edited.
+CI pins `oven-sh/setup-bun` to the same Bun version as `packageManager`, then performs a frozen install followed by formatting, lint, typecheck, full tests, and build. Quality is the merge gate. CodeQL remains a separate least-privilege JavaScript/TypeScript security scan. Renovate groups coupled Bun runtime, Next/React, Tailwind, and Oxc updates and may automerge eligible non-major updates. Keep automation changes scoped and verify pinned action digests if automation is intentionally edited.
 
 ## Before committing
 
