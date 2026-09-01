@@ -1,6 +1,6 @@
 # uwu.ee
 
-uwu.ee is an anonymous email forwarding landing page: a CRT screen with a custom ASCII mark.
+uwu.ee is an anonymous email forwarding landing page: a CRT screen with a custom ASCII envelope.
 
 ## Stack
 
@@ -33,4 +33,4 @@ Optionally audit the locked dependency graph with `bun audit`.
 
 ## Page contract
 
-The page is a no-scroll viewport with hidden overflow. Check viewport behavior and guard against accidental horizontal clipping rather than requiring a literal zero-overflow document. Keep the custom ASCII mark and CRT overlays only: no prompt, heading, or tagline. Do not add invite gating or background video. Previews build with Vite into `dist` using the repository `vercel.json`.
+The page is a no-scroll viewport with hidden overflow. Check viewport behavior and guard against accidental horizontal clipping rather than requiring a literal zero-overflow document. Keep the custom ASCII envelope, CRT overlays, and the caption `Anonymous email forwarding service`. Do not add a shell prompt, invite gating, or background video. Previews build with Vite into `dist` using the repository `vercel.json`.

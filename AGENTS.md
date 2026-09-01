@@ -45,13 +45,14 @@ Tests live in `tests/`. `tests/tooling.test.ts` protects repository artifacts an
 
 ## Product
 
-This is still an anonymous email forwarding landing page. Keep that identity in maintainer docs. The page itself is only the ASCII mark and CRT effects: no prompt, heading, tagline, or extra copy. Do not add invite gating, authentication endpoints, forms, dashboards, or background video sources.
+This is still an anonymous email forwarding landing page. The page is the envelope ASCII mark, the caption `Anonymous email forwarding service`, and CRT effects. Do not add a shell prompt, heading, invite gating, authentication endpoints, forms, dashboards, or background video sources.
 
 ## Styling and UI invariants
 
-- Keep a custom ASCII mark for uwu / uwu.ee, not a generic font lockup. Highlight the center `uwu` token. Do not reflow `src/logo.ts` with the formatter.
+- Keep a custom ASCII envelope for uwu / uwu.ee, drawn with `uwu` / `owo` / `qwq` texture, not a generic font lockup. Highlight the center `uwu` seal. Do not reflow `src/logo.ts` with the formatter.
 - Keep CRT scanlines, flicker, bloom, and slight curvature in plain CSS.
 - Keep the indigo tokens `--main: #818cf8`, `--greyed: #7b82c9`, and `--text: #dfdfdf`.
+- Keep the caption `Anonymous email forwarding service`. Do not add a shell prompt.
 - The landing page is an intentional no-scroll viewport with hidden overflow; its document geometry can still extend vertically. On narrow and short screens, verify viewport behavior and guard against accidental horizontal clipping whenever layout classes change.
 - Public metadata stays `title: uwu`, `description: OwO What’s This`, `og:url: https://uwu.ee/`, and `theme-color: #818CF8`.
 

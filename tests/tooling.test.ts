@@ -95,7 +95,7 @@ const developmentDependencyPins = {
   vite: "8.2.2",
 } as const;
 
-const asciiLogoHash = "09415f62017464d98675b43024aac16abbaa4efa9f641a2d1270ba12a0ff767e";
+const asciiLogoHash = "cd96401a7f34602bbf6c17b4a22c1be653899d041f5ddd986d38fac9a4ff556b";
 
 const packageJson = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url), "utf8"),
@@ -454,26 +454,28 @@ describe("Oxc tooling artifacts", () => {
 });
 
 describe("CRT landing page artifacts", () => {
-  test("keeps public metadata and an ASCII-only CRT page", () => {
+  test("keeps public metadata, the envelope mark, and the service caption", () => {
     expect(indexSource).toMatch(/<title>uwu<\/title>/);
     expect(indexSource).toMatch(/name="description"\s+content="OwO What’s This"/);
     expect(indexSource).toMatch(/property="og:url"\s+content="https:\/\/uwu\.ee\/"/);
     expect(indexSource).toMatch(/name="theme-color"\s+content="#818CF8"/);
     expect(indexSource).toContain('src="/src/main.ts"');
     expect(indexSource).toContain('<pre id="c"></pre>');
+    expect(indexSource).toContain(">Anonymous email forwarding service<");
     expect(indexSource).not.toMatch(/<h[1-6]\b/i);
     expect(indexSource).not.toMatch(/id="t"/);
-    expect(indexSource).not.toMatch(/uwu@ee|~\/mail/);
+    expect(indexSource).not.toMatch(/uwu@ee|~\/mail|\$/);
     expect(indexSource).not.toMatch(/<video\b/i);
     expect(indexSource).not.toMatch(/<form\b/i);
     expect(indexSource).not.toMatch(/invite/i);
+    expect(styleSource).toContain("#caption");
     expect(styleSource).not.toMatch(/#t\b/);
-    expect(`${indexSource}\n${mainSource}`).not.toMatch(/Anonymous email forwarding service/);
   });
 
-  test("keeps a hashed custom ASCII mark with a highlighted center token", () => {
+  test("keeps a hashed envelope ASCII mark with a highlighted uwu seal", () => {
     expect(logoSource).toContain("«uwu»");
     expect(logoSource).toMatch(/uwuowoqwq/);
+    expect(logoSource).toMatch(/ {8,}/);
     expect(logoSource.split("\n").length).toBeGreaterThan(16);
     expect(createHash("sha256").update(logoSource).digest("hex")).toBe(asciiLogoHash);
     expect(mainSource).toContain('asciiLogo.split("«uwu»")');
@@ -559,6 +561,7 @@ describe("maintainer documentation artifacts", () => {
       "anonymous email forwarding",
       "CRT",
       "ASCII",
+      "envelope",
       "no-scroll",
       "vercel.json",
       "dist",
@@ -575,6 +578,8 @@ describe("maintainer documentation artifacts", () => {
       "scanlines",
       "flicker",
       "curvature",
+      "envelope",
+      "Anonymous email forwarding service",
       "CodeQL",
       "Renovate",
       "Never push",

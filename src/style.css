@@ -60,6 +60,15 @@ pre {
     0 0 12px #c7d2fe;
 }
 
+#caption {
+  margin: 0.9rem 0 0;
+  font-size: 85%;
+  letter-spacing: 0.04em;
+  color: var(--greyed);
+  text-shadow: 0 0 6px var(--main);
+  white-space: nowrap;
+}
+
 .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

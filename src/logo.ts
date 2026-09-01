@@ -1,24 +1,19 @@
 export const asciiLogo = String.raw`
-      uwuowoqwquwuowoq                       wquwuowoqwquwuow
-     oqwquwuowoqwquwuowo                   qwquwuowoqwquwuowoq
-    wquwuowoqwquwuowoqwqu                 wuowoqwquwuowoqwquwuo
-   woqwquwuowoqwquwuowoqwq               uwuowoqwquwuowoqwquwuow
-  oqwquwuowoqwquwuowoqwquwuo           woqwquwuowoqwquwuowoqwquwu
- owoqwquwuowoqwquwuowoqwquwuowoqwq   uwuowoqwquwuowoqwquwuowoqwquwuowo
-qwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqw
-quwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquw
-uowoqwquwuowoqwquwuowoqwquwuowo«uwu»uowoqwquwuowoqwquwuowoqwquwuow
+uwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwu
+owoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowo
+qwquwuowoqwquwuow                                oqwquwuowoqwquwuo
+woqwquwuowoqwquwuowoq                         wquwuowoqwquwuowoqwq
+uw    uowoqwquwuowoqwquw                  uowoqwquwuowoqwquw    uo
+wo        qwquwuowoqwquwuowo           qwquwuowoqwquwuowo       qw
+qu           wuowoqwquwuowoqwquw   uowoqwquwuowoqwquw           uo
+wo               qwquwuowoqwquwuowoqwquwuowoqwquw               uo
+wo                   qwquwuowoqwquwuowoqwquwuo                  wo
+qw                      quwuowoqwquwuowoqw                      qu
+wu                          owoqwquwuow                         oq
+wq                           uwuowoqwq                          uw
+uo                           wo«uwu»uo                          wo
+qw                           quwuowoqw                          qu
+wu                                                              ow
 oqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqw
- quwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwq
-  uwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqw
-   quwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuow
-     oqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoq
-       wquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuow
-          oqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowo
-             qwquwuowoqwquwuowoqwquwuowoqwquwuowoqwqu
-                 wuowoqwquwuowoqwquwuowoqwquwuowo
-                    qwquwuowoqwquwuowoqwquwuow
-                       oqwquwuowoqwquwuow
-                           oqwquwuowo
-                              qwqu
+quwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquwuowoqwquw
 `.replace(/^\n/, "");
