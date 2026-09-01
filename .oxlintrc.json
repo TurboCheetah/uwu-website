@@ -1,14 +1,13 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [".hermes/**", "dist/**"],
   "categories": {
     "correctness": "error",
     "suspicious": "error"
   },
-  "plugins": ["eslint", "typescript", "unicorn", "oxc", "react", "jsx-a11y", "nextjs"],
+  "plugins": ["eslint", "typescript", "unicorn", "oxc"],
   "env": {
-    "browser": true
-  },
-  "rules": {
-    "react/react-in-jsx-scope": "off"
+    "browser": true,
+    "node": true
   }
 }

@@ -1,0 +1,183 @@
+:root {
+  --greyed: #7b82c9;
+  --main: #818cf8;
+  --text: #dfdfdf;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: 100%;
+  cursor: default;
+  overflow: hidden;
+  background: #000;
+}
+
+.crt {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 2.5% / 3.5%;
+  box-shadow:
+    inset 0 0 12vw 4.5vw rgb(0 0 0 / 72%),
+    inset 0 0 2.4vw 0.7vw rgb(129 140 248 / 14%);
+}
+
+#p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) perspective(1100px) rotateX(3.5deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(0.55rem, 1.7vw, 1rem);
+}
+
+pre {
+  font-family: inherit;
+  margin: 0;
+}
+
+#c {
+  color: var(--greyed);
+  text-shadow:
+    0 0 5px var(--main),
+    0 0 8px #a5b4fc;
+}
+
+#c span {
+  color: var(--text);
+  text-shadow:
+    0 0 6px var(--main),
+    0 0 12px #c7d2fe;
+}
+
+#caption {
+  margin: 0.85rem 0 0;
+  font-size: 85%;
+  color: #ffffff;
+  text-shadow:
+    0 0 5px #292929,
+    0 0 5px #ffffff;
+  white-space: nowrap;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.27861;
+  }
+  5% {
+    opacity: 0.34769;
+  }
+  10% {
+    opacity: 0.23604;
+  }
+  15% {
+    opacity: 0.90626;
+  }
+  20% {
+    opacity: 0.18128;
+  }
+  25% {
+    opacity: 0.83891;
+  }
+  30% {
+    opacity: 0.65583;
+  }
+  35% {
+    opacity: 0.67807;
+  }
+  40% {
+    opacity: 0.26559;
+  }
+  45% {
+    opacity: 0.84693;
+  }
+  50% {
+    opacity: 0.96019;
+  }
+  55% {
+    opacity: 0.08594;
+  }
+  60% {
+    opacity: 0.20313;
+  }
+  65% {
+    opacity: 0.71988;
+  }
+  70% {
+    opacity: 0.53455;
+  }
+  75% {
+    opacity: 0.37288;
+  }
+  80% {
+    opacity: 0.71428;
+  }
+  85% {
+    opacity: 0.70419;
+  }
+  90% {
+    opacity: 0.7003;
+  }
+  95% {
+    opacity: 0.36108;
+  }
+  100% {
+    opacity: 0.24387;
+  }
+}
+
+.crt::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: rgb(18 16 16 / 10%);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.crt::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgb(18 16 16 / 0%) 50%, rgb(0 0 0 / 25%) 50%),
+    linear-gradient(90deg, rgb(255 0 0 / 6%), rgb(0 255 0 / 2%), rgb(0 0 255 / 6%));
+  z-index: 2;
+  background-size:
+    100% 2px,
+    3px 100%;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 600px) {
+  #p {
+    font-size: clamp(0.38rem, 2.2vw, 0.72rem);
+  }
+}
