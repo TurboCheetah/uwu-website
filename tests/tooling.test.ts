@@ -311,7 +311,7 @@ describe("repository automation artifacts", () => {
   const checkout = "actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98";
   const setupBun = "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6";
   const cache = "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9";
-  const codeqlDigest = "5d4e8d1aca955e8d8589aabd499c5cae939e33c7";
+  const codeqlDigest = "cdf488f595d80d6e07e03d4674febd5ab45fa938";
   const concurrency =
     "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}";
 
