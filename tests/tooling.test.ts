@@ -70,6 +70,7 @@ const runtimeDependencyPins = {
   "tailwind-merge": "3.6.0",
 } as const;
 const developmentDependencyPins = {
+  "@types/bun": "1.4.0",
   "@types/node": "26.4.0",
   "@types/react": "19.2.18",
   "@types/react-dom": "19.2.4",
@@ -240,7 +241,7 @@ describe("root package contract", () => {
   });
 
   test("pins the Bun package manager", () => {
-    expect(packageJson.packageManager).toBe("bun@1.3.14");
+    expect(packageJson.packageManager).toBe("bun@1.4.0");
   });
 
   test("declares Radix Slot as an exact runtime dependency", () => {
