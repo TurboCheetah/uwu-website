@@ -471,6 +471,10 @@ describe("CRT landing page artifacts", () => {
     expect(indexSource).not.toMatch(/<form\b/i);
     expect(indexSource).not.toMatch(/invite/i);
     expect(styleSource).toContain("#caption");
+    expect(styleSource).toMatch(
+      /#caption\s*\{[^}]*color:\s*#ffffff[^}]*text-shadow:\s*0 0 5px #292929,\s*0 0 5px #ffffff/s,
+    );
+    expect(styleSource).not.toMatch(/#caption\s*\{[^}]*var\(--greyed\)/s);
     expect(styleSource).not.toMatch(/#t\b/);
   });
 

@@ -61,11 +61,12 @@ pre {
 }
 
 #caption {
-  margin: 0.9rem 0 0;
+  margin: 0.85rem 0 0;
   font-size: 85%;
-  letter-spacing: 0.04em;
-  color: var(--greyed);
-  text-shadow: 0 0 6px var(--main);
+  color: #ffffff;
+  text-shadow:
+    0 0 5px #292929,
+    0 0 5px #ffffff;
   white-space: nowrap;
 }
 

@@ -52,7 +52,7 @@ This is still an anonymous email forwarding landing page. The page is the envelo
 - Keep a custom ASCII envelope for uwu / uwu.ee, drawn with `uwu` / `owo` / `qwq` texture, not a generic font lockup. Highlight the center `«uwu»` seal without shrinking its column width. Do not reflow `src/logo.ts` with the formatter.
 - Keep CRT scanlines, flicker, bloom, and slight curvature in plain CSS. Disable the flicker animation when `prefers-reduced-motion: reduce` is set.
 - Keep the indigo tokens `--main: #818cf8`, `--greyed: #7b82c9`, and `--text: #dfdfdf`.
-- Keep the caption `Anonymous email forwarding service`. Do not add a shell prompt.
+- Keep the caption `Anonymous email forwarding service` in white (`#ffffff`) with the same CRT prompt glow (`0 0 5px #292929` and `0 0 5px #ffffff`). Do not add a shell prompt.
 - The landing page is an intentional no-scroll viewport with hidden overflow; its document geometry can still extend vertically. On narrow and short screens, verify viewport behavior and guard against accidental horizontal clipping whenever layout classes change.
 - Public metadata stays `title: uwu`, `description: OwO What’s This`, `og:url: https://uwu.ee/`, and `theme-color: #818CF8`.
 
