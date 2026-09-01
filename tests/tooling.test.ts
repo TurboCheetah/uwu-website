@@ -64,20 +64,20 @@ const runtimeDependencyPins = {
   "@radix-ui/react-slot": "1.3.3",
   "class-variance-authority": "0.7.1",
   clsx: "2.1.1",
-  "lucide-react": "1.28.0",
+  "lucide-react": "1.38.0",
   ...nextReactCompatibilityPins,
-  sonner: "2.0.7",
+  sonner: "2.0.8",
   "tailwind-merge": "3.6.0",
 } as const;
 const developmentDependencyPins = {
-  "@types/node": "26.1.2",
+  "@types/node": "26.4.0",
   "@types/react": "19.2.18",
   "@types/react-dom": "19.2.4",
   typescript: "7.0.2",
 } as const;
 const tailwindDependencyPins = {
   "@tailwindcss/postcss": "4.3.3",
-  postcss: "8.5.25",
+  postcss: "8.5.26",
   tailwindcss: "4.3.3",
 } as const;
 const semanticColors = [
