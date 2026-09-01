@@ -459,6 +459,8 @@ describe("CRT landing page artifacts", () => {
     expect(indexSource).toMatch(/name="description"\s+content="OwO What’s This"/);
     expect(indexSource).toMatch(/property="og:url"\s+content="https:\/\/uwu\.ee\/"/);
     expect(indexSource).toMatch(/name="theme-color"\s+content="#818CF8"/);
+    expect(indexSource).toContain('content="width=device-width, initial-scale=1"');
+    expect(indexSource).not.toMatch(/maximum-scale|user-scalable/);
     expect(indexSource).toContain('src="/src/main.ts"');
     expect(indexSource).toContain('<pre id="c"></pre>');
     expect(indexSource).toContain(">Anonymous email forwarding service<");
@@ -479,7 +481,7 @@ describe("CRT landing page artifacts", () => {
     expect(logoSource.split("\n").length).toBeGreaterThan(16);
     expect(createHash("sha256").update(logoSource).digest("hex")).toBe(asciiLogoHash);
     expect(mainSource).toContain('asciiLogo.split("«uwu»")');
-    expect(mainSource).toContain('highlight.textContent = "uwu"');
+    expect(mainSource).toContain('highlight.textContent = "«uwu»"');
   });
 
   test("keeps CRT scanlines, flicker, bloom, curvature, and indigo tokens", () => {
@@ -488,6 +490,7 @@ describe("CRT landing page artifacts", () => {
     expect(styleSource).toContain("--text: #dfdfdf");
     expect(styleSource).toContain("@keyframes flicker");
     expect(styleSource).toContain("animation: flicker 0.15s infinite");
+    expect(styleSource).toContain("prefers-reduced-motion");
     expect(styleSource).toContain("100% 2px");
     expect(styleSource).toContain("3px 100%");
     expect(styleSource).toContain("perspective(1100px)");
@@ -578,6 +581,7 @@ describe("maintainer documentation artifacts", () => {
       "scanlines",
       "flicker",
       "curvature",
+      "prefers-reduced-motion",
       "envelope",
       "Anonymous email forwarding service",
       "CodeQL",

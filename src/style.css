@@ -153,6 +153,13 @@ pre {
   animation: flicker 0.15s infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .crt::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 .crt::before {
   content: " ";
   display: block;

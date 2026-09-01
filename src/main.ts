@@ -7,7 +7,7 @@ if (mark instanceof HTMLElement) {
   mark.replaceChildren();
   mark.append(before ?? "");
   const highlight = document.createElement("span");
-  highlight.textContent = "uwu";
+  highlight.textContent = "«uwu»";
   mark.append(highlight);
   mark.append(after ?? "");
 }
