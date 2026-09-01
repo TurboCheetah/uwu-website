@@ -9,7 +9,7 @@ Pragmatic maintainer guide for `uwu.ee`, a quiet CRT landing page for anonymous 
 - Strict TypeScript 7 uses Bundler module resolution. There is no Next plugin and no `baseUrl`.
 - Plain CSS in `src/style.css` owns the CRT look. Do not add a utility-class CSS config or a component library.
 
-Do not infer hosting or deployment behavior that is not represented in repository automation.
+Vercel is configured in `vercel.json` as the Vite preset: frozen Bun install, `bun run build`, and static output from `dist`. Do not infer other hosting behavior.
 
 ## Quick commands
 
@@ -45,14 +45,13 @@ Tests live in `tests/`. `tests/tooling.test.ts` protects repository artifacts an
 
 ## Product
 
-This is still an anonymous email forwarding landing page. Keep that identity in maintainer docs and in the spare on-page prompt. Do not add invite gating, authentication endpoints, forms, dashboards, or background video sources.
+This is still an anonymous email forwarding landing page. Keep that identity in maintainer docs. The page itself is only the ASCII mark and CRT effects: no prompt, heading, tagline, or extra copy. Do not add invite gating, authentication endpoints, forms, dashboards, or background video sources.
 
 ## Styling and UI invariants
 
 - Keep a custom ASCII mark for uwu / uwu.ee, not a generic font lockup. Highlight the center `uwu` token. Do not reflow `src/logo.ts` with the formatter.
 - Keep CRT scanlines, flicker, bloom, and slight curvature in plain CSS.
 - Keep the indigo tokens `--main: #818cf8`, `--greyed: #7b82c9`, and `--text: #dfdfdf`.
-- Keep the spare prompt `[uwu@ee] in [~/mail] $`.
 - The landing page is an intentional no-scroll viewport with hidden overflow; its document geometry can still extend vertically. On narrow and short screens, verify viewport behavior and guard against accidental horizontal clipping whenever layout classes change.
 - Public metadata stays `title: uwu`, `description: OwO What’s This`, `og:url: https://uwu.ee/`, and `theme-color: #818CF8`.
 

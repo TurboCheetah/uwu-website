@@ -60,20 +60,6 @@ pre {
     0 0 12px #c7d2fe;
 }
 
-#t {
-  margin-top: 0.85rem;
-  font-size: 85%;
-  color: var(--text);
-  text-shadow:
-    0 0 5px #292929,
-    0 0 5px #ffffff;
-  white-space: nowrap;
-}
-
-#t span {
-  color: var(--main);
-}
-
 .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

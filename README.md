@@ -33,4 +33,4 @@ Optionally audit the locked dependency graph with `bun audit`.
 
 ## Page contract
 
-The page is a no-scroll viewport with hidden overflow. Check viewport behavior and guard against accidental horizontal clipping rather than requiring a literal zero-overflow document. Keep the custom ASCII mark, CRT overlays, and the spare `[uwu@ee] in [~/mail] $` prompt. Do not add invite gating or background video.
+The page is a no-scroll viewport with hidden overflow. Check viewport behavior and guard against accidental horizontal clipping rather than requiring a literal zero-overflow document. Keep the custom ASCII mark and CRT overlays only: no prompt, heading, or tagline. Do not add invite gating or background video. Previews build with Vite into `dist` using the repository `vercel.json`.

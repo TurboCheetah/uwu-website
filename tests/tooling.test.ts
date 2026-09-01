@@ -126,6 +126,15 @@ const codeqlWorkflowSource = readFileSync(
 const renovateConfig = JSON.parse(
   readFileSync(new URL("../.github/renovate.json", import.meta.url), "utf8"),
 ) as RenovateConfig;
+const vercelConfig = JSON.parse(
+  readFileSync(new URL("../vercel.json", import.meta.url), "utf8"),
+) as {
+  $schema?: string;
+  framework?: string;
+  installCommand?: string;
+  buildCommand?: string;
+  outputDirectory?: string;
+};
 const readmeSource = readFileSync(new URL("../README.md", import.meta.url), "utf8");
 const agentsSource = readFileSync(new URL("../AGENTS.md", import.meta.url), "utf8");
 
@@ -445,16 +454,20 @@ describe("Oxc tooling artifacts", () => {
 });
 
 describe("CRT landing page artifacts", () => {
-  test("keeps public metadata, the ASCII mark, and the spare prompt", () => {
+  test("keeps public metadata and an ASCII-only CRT page", () => {
     expect(indexSource).toMatch(/<title>uwu<\/title>/);
     expect(indexSource).toMatch(/name="description"\s+content="OwO What’s This"/);
     expect(indexSource).toMatch(/property="og:url"\s+content="https:\/\/uwu\.ee\/"/);
     expect(indexSource).toMatch(/name="theme-color"\s+content="#818CF8"/);
-    expect(indexSource).toContain("[<span>uwu</span>@<span>ee</span>] in [~/<span>mail</span>] $");
     expect(indexSource).toContain('src="/src/main.ts"');
+    expect(indexSource).toContain('<pre id="c"></pre>');
+    expect(indexSource).not.toMatch(/<h[1-6]\b/i);
+    expect(indexSource).not.toMatch(/id="t"/);
+    expect(indexSource).not.toMatch(/uwu@ee|~\/mail/);
     expect(indexSource).not.toMatch(/<video\b/i);
     expect(indexSource).not.toMatch(/<form\b/i);
     expect(indexSource).not.toMatch(/invite/i);
+    expect(styleSource).not.toMatch(/#t\b/);
     expect(`${indexSource}\n${mainSource}`).not.toMatch(/Anonymous email forwarding service/);
   });
 
@@ -507,6 +520,18 @@ describe("CRT landing page artifacts", () => {
     expect(sources).not.toMatch(/\/api\/auth/);
     expect(sources).not.toMatch(/bg_av1\.mp4|bg\.webm|bg\.mp4/);
   });
+
+  test("deploys the Vite static dist output on Vercel", () => {
+    expect(existsSync(new URL("../vercel.json", import.meta.url))).toBe(true);
+    expect(vercelConfig).toEqual({
+      $schema: "https://openapi.vercel.sh/vercel.json",
+      framework: "vite",
+      installCommand: "bun install --frozen-lockfile",
+      buildCommand: "bun run build",
+      outputDirectory: "dist",
+    });
+    expect(packageJson.scripts?.build).toBe("vite build");
+  });
 });
 
 describe("maintainer documentation artifacts", () => {
@@ -535,6 +560,8 @@ describe("maintainer documentation artifacts", () => {
       "CRT",
       "ASCII",
       "no-scroll",
+      "vercel.json",
+      "dist",
     ];
     for (const marker of sharedArchitectureMarkers) {
       expect(readmeSource).toContain(marker);
@@ -569,6 +596,7 @@ describe("maintainer documentation artifacts", () => {
       /Tailwind/,
       /INVITE_CODE/,
       /\/api\/auth/,
+      /\[uwu@ee\]/,
     ];
     for (const source of [readmeSource, agentsSource]) {
       for (const marker of staleMarkers) expect(source).not.toMatch(marker);
