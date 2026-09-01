@@ -56,7 +56,7 @@ interface RenovateConfig {
 const radixSlot = "@radix-ui/react-slot";
 const radixSlotVersion = "1.3.3";
 const nextReactCompatibilityPins = {
-  next: "16.3.0",
+  next: "16.3.4",
   react: "19.2.8",
   "react-dom": "19.2.8",
 } as const;
@@ -73,7 +73,7 @@ const developmentDependencyPins = {
   "@types/bun": "1.4.0",
   "@types/node": "26.4.0",
   "@types/react": "19.2.18",
-  "@types/react-dom": "19.2.4",
+  "@types/react-dom": "19.2.5",
   typescript: "7.0.2",
 } as const;
 const tailwindDependencyPins = {
