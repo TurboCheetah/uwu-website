@@ -310,7 +310,7 @@ describe("root package contract", () => {
 describe("repository automation artifacts", () => {
   const checkout = "actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98";
   const setupBun = "oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6";
-  const cache = "actions/cache@caa296126883cff596d87d8935842f9db880ef25";
+  const cache = "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9";
   const codeqlDigest = "5d4e8d1aca955e8d8589aabd499c5cae939e33c7";
   const concurrency =
     "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}";
@@ -330,7 +330,7 @@ describe("repository automation artifacts", () => {
     expect(ciWorkflowSource).toContain("timeout-minutes: 20");
     expect(ciWorkflowSource).toContain(`uses: ${checkout}`);
     expect(ciWorkflowSource).toContain(`uses: ${setupBun} # v2`);
-    expect(ciWorkflowSource).toContain(`uses: ${cache} # v5`);
+    expect(ciWorkflowSource).toContain(`uses: ${cache} # v6`);
     expect(ciWorkflowSource).not.toContain("bun-version:");
     expect(ciWorkflowSource.match(/oven-sh\/setup-bun@/g)).toHaveLength(1);
     expect(ciWorkflowSource).not.toContain("GITHUB_TOKEN");
