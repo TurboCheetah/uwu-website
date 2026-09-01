@@ -498,8 +498,8 @@ describe("TypeScript 7 migration artifacts", () => {
 
 describe("Oxc tooling artifacts", () => {
   test("pins only the exact Oxc development tools", () => {
-    expect(packageJson.devDependencies?.oxfmt).toBe("0.62.0");
-    expect(packageJson.devDependencies?.oxlint).toBe("1.77.0");
+    expect(packageJson.devDependencies?.oxfmt).toBe("0.66.0");
+    expect(packageJson.devDependencies?.oxlint).toBe("1.81.0");
     expect(packageJson.devDependencies?.eslint).toBeUndefined();
     expect(packageJson.devDependencies?.["@antfu/eslint-config"]).toBeUndefined();
   });
