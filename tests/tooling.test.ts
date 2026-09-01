@@ -82,25 +82,25 @@ interface CiWorkflow {
   jobs: Record<string, WorkflowJob>;
 }
 
-const radixSlot = "@radix-ui/react-slot";
-const radixSlotVersion = "1.3.3";
+const radixUi = "radix-ui";
+const radixUiVersion = "1.6.7";
 const nextReactCompatibilityPins = {
   next: "16.3.4",
   react: "19.2.8",
   "react-dom": "19.2.8",
 } as const;
 const runtimeDependencyPins = {
-  "@radix-ui/react-slot": "1.3.3",
   "class-variance-authority": "0.7.1",
   clsx: "2.1.1",
-  "lucide-react": "1.38.0",
+  "lucide-react": "1.39.0",
   ...nextReactCompatibilityPins,
+  "radix-ui": "1.6.7",
   sonner: "2.0.8",
   "tailwind-merge": "3.6.0",
 } as const;
 const developmentDependencyPins = {
   "@types/bun": "1.4.0",
-  "@types/node": "26.4.0",
+  "@types/node": "26.4.1",
   "@types/react": "19.2.18",
   "@types/react-dom": "19.2.5",
   typescript: "7.0.2",
@@ -201,7 +201,7 @@ const oxlintConfigUrl = new URL("../.oxlintrc.json", import.meta.url);
 const globalsCss = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 const componentsConfig = JSON.parse(
   readFileSync(new URL("../components.json", import.meta.url), "utf8"),
-) as { tailwind?: { config?: string } };
+) as { style?: string; tailwind?: { config?: string } };
 const postcssConfigUrl = new URL("../postcss.config.mjs", import.meta.url);
 const legacyPostcssConfigUrl = new URL("../postcss.config.cjs", import.meta.url);
 const tailwindConfigUrl = new URL("../tailwind.config.js", import.meta.url);
@@ -279,8 +279,9 @@ describe("root package contract", () => {
     );
   });
 
-  test("declares Radix Slot as an exact runtime dependency", () => {
-    expect(packageJson.dependencies?.[radixSlot]).toBe(radixSlotVersion);
+  test("declares the unified Radix package as an exact runtime dependency", () => {
+    expect(packageJson.dependencies?.[radixUi]).toBe(radixUiVersion);
+    expect(packageJson.dependencies?.["@radix-ui/react-slot"]).toBeUndefined();
   });
 
   test("pins the Next and React compatibility group exactly", () => {
@@ -616,6 +617,7 @@ describe("Tailwind CSS 4 migration artifacts", () => {
   test("removes legacy Tailwind configuration and selects CSS-first ShadCN configuration", () => {
     expect(existsSync(tailwindConfigUrl)).toBe(false);
     expect(componentsConfig.tailwind?.config).toBe("");
+    expect(componentsConfig.style).toBe("radix-lyra");
   });
 
   test("uses CSS-first Tailwind directives and preserves semantic theme mappings", () => {
@@ -745,16 +747,17 @@ describe("maintainer documentation artifacts", () => {
   });
 });
 
-describe("Radix Slot dependency artifacts", () => {
+describe("Radix UI dependency artifacts", () => {
   test("is imported directly by Button", () => {
-    expect(buttonSource).toMatch(/import\s+\{\s*Slot\s*\}\s+from\s+['"]@radix-ui\/react-slot['"]/);
+    expect(buttonSource).toMatch(/import\s+\{\s*Slot\s*\}\s+from\s+["']radix-ui["']/);
+    expect(buttonSource).toMatch(/asChild\s*\?\s*Slot\.Root\s*:\s*["']button["']/);
   });
 
   test("is mirrored exactly in the Bun workspace root", () => {
-    expect(bunLock.workspaces?.[""]?.dependencies?.[radixSlot]).toBe(radixSlotVersion);
+    expect(bunLock.workspaces?.[""]?.dependencies?.[radixUi]).toBe(radixUiVersion);
   });
 
   test("has the exact resolved identity in the Bun lockfile", () => {
-    expect(bunLock.packages?.[radixSlot]?.[0]).toBe(`${radixSlot}@${radixSlotVersion}`);
+    expect(bunLock.packages?.[radixUi]?.[0]).toBe(`${radixUi}@${radixUiVersion}`);
   });
 });
