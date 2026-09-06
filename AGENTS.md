@@ -26,7 +26,6 @@ bun run build
 Useful focused checks:
 
 ```bash
-bun test tests/tooling.test.ts
 bun audit
 ```
 
@@ -41,7 +40,7 @@ Run commands from the repository root. Use the frozen install command rather tha
 - Keep names boring: exported values use camelCase unless they are types, which use PascalCase. The page has no client framework runtime.
 - `*.tsbuildinfo` is generated and ignored. Never commit it.
 
-Tests live in `tests/`. `tests/tooling.test.ts` protects repository artifacts and documentation contracts. Prefer focused tests while iterating, then run the full suite.
+Tests live in `tests/`. Prefer focused tests while iterating, then run the full suite.
 
 ## Product
 
