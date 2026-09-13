@@ -1,33 +1,21 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>TurboCheetah/renovate-config"
-  ],
+  "extends": ["github>TurboCheetah/renovate-config"],
   "packageRules": [
     {
       "groupName": "Bun runtime",
-      "matchPackageNames": [
-        "bun",
-        "@types/bun"
-      ]
+      "matchPackageNames": ["bun", "@types/bun"]
     },
     {
       "groupName": "Oxc tooling",
-      "matchPackageNames": [
-        "oxfmt",
-        "oxlint"
-      ]
+      "matchPackageNames": ["oxfmt", "oxlint"]
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/)package\\.json$/"
-      ],
-      "matchStrings": [
-        "\\\"packageManager\\\"\\s*:\\s*\\\"bun@(?<currentValue>[^\\\"]+)\\\""
-      ],
+      "managerFilePatterns": ["/(^|/)package\\.json$/"],
+      "matchStrings": ["\\\"packageManager\\\"\\s*:\\s*\\\"bun@(?<currentValue>[^\\\"]+)\\\""],
       "depNameTemplate": "bun",
       "datasourceTemplate": "npm",
       "versioningTemplate": "semver",
