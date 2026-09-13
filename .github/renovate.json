@@ -1,54 +1,37 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "helpers:pinGitHubActionDigests",
-    "group:allNonMajor",
-    ":enableVulnerabilityAlerts"
+    "github>TurboCheetah/renovate-config"
   ],
-  "labels": ["Meta: Dependencies"],
-  "schedule": ["before 12pm on Sunday"],
+  "packageRules": [
+    {
+      "groupName": "Bun runtime",
+      "matchPackageNames": [
+        "bun",
+        "@types/bun"
+      ]
+    },
+    {
+      "groupName": "Oxc tooling",
+      "matchPackageNames": [
+        "oxfmt",
+        "oxlint"
+      ]
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/(^|\/)package\\.json$/"],
-      "matchStrings": ["\\\"packageManager\\\"\\s*:\\s*\\\"bun@(?<currentValue>[^\\\"]+)\\\""],
+      "managerFilePatterns": [
+        "/(^|/)package\\.json$/"
+      ],
+      "matchStrings": [
+        "\\\"packageManager\\\"\\s*:\\s*\\\"bun@(?<currentValue>[^\\\"]+)\\\""
+      ],
       "depNameTemplate": "bun",
       "datasourceTemplate": "npm",
       "versioningTemplate": "semver",
       "autoReplaceStringTemplate": "\"packageManager\": \"bun@{{{newValue}}}\""
     }
-  ],
-  "packageRules": [
-    {
-      "groupName": "Bun runtime",
-      "matchPackageNames": ["bun", "@types/bun"]
-    },
-    {
-      "groupName": "Oxc tooling",
-      "matchPackageNames": ["oxfmt", "oxlint"]
-    },
-    {
-      "matchManagers": ["bun"],
-      "matchUpdateTypes": ["minor", "patch", "pin"],
-      "automerge": true
-    },
-    {
-      "matchManagers": ["github-actions"],
-      "automerge": false
-    },
-    {
-      "matchUpdateTypes": ["major"],
-      "automerge": false
-    },
-    {
-      "matchJsonata": ["$exists(vulnerabilityFixVersion)"],
-      "automerge": false
-    }
-  ],
-  "osvVulnerabilityAlerts": true,
-  "vulnerabilityAlerts": {
-    "addLabels": ["security"],
-    "vulnerabilityFixStrategy": "lowest"
-  }
+  ]
 }
